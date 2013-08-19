@@ -1,0 +1,9 @@
+{
+	"folders":
+	[
+		{
+			"path": "/Users/kahokas/Documents/repos/work/tuija",
+            "file_exclude_patterns": ["tuija.sublime-workspace"]
+		}
+	]
+}
