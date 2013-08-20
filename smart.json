@@ -1,7 +1,8 @@
 {
   "packages": {
-    "bootstrap-3": {},
     "jquery-ui": {},
-    "fullcalendar": {}
+    "fullcalendar": {},
+    "iron-router": {},
+    "accounts-ui-bootstrap-dropdown": {}
   }
 }
