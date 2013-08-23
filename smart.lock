@@ -19,14 +19,14 @@
         "commit": "78dba7c564bf7baacf6556c70a3cc179d0e137c4"
       },
       "iron-router": {
-        "git": "https://github.com/EventedMind/meteor-iron-router.git",
-        "tag": "v0.5.3",
-        "commit": "f737b04106a226c0f8772b9112673a9be49406d7"
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "tag": "v0.5.4",
+        "commit": "3e0e22ff85630b7503d0daa1538c6d90abb84020"
       },
       "accounts-ui-bootstrap-dropdown": {
         "git": "https://github.com/erobit/meteor-accounts-ui-bootstrap-dropdown.git",
-        "tag": "v0.6.5.0",
-        "commit": "356146b2cd9e5a4e3ed71b8d596cb09540d3c359"
+        "tag": "v0.6.5.1",
+        "commit": "c8b29d2e7f8611d6dec9d6d23c1c2b94e000b0fb"
       }
     }
   }

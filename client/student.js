@@ -1,4 +1,4 @@
-Template.layout.rendered = function() {
+Template.calendarTemplate.rendered = function() {
     $('#calendar').fullCalendar({
         weekends: false,
         defaultView: 'agendaWeek',

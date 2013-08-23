@@ -1,0 +1,24 @@
+<template name="navbarTemplate">
+    <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="brand" href="/">Tuija Appointment scheduler</a>
+                <div class="nav-collapse collapse">
+                    {{#if currentUser.profile.admin}}
+                    <ul class="nav">
+                        <li><a href="/manage">Modify appointments</a></li>
+                    </ul>
+                    {{/if}}
+                    <div class="pull-right">
+                        {{loginButtons align="right"}}
+                    </div>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+</template>
