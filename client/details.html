@@ -3,6 +3,22 @@
 </template>
 
 <template name='appointmentDetailsManageTemplate'>
-    <h3>Modification forms here</h3>
+    <form>
+        <fieldset>
+            <legend>Appointment creation settings</legend>
+            <p>
+                <label for="name">Appointment name</label>
+                <input type="text" name="name" id="name_field" value="Round 1"/>
+            </p>
+            <p>
+                <label for="duration">Appointment duration (in minutes)</label>
+                <input type="number" name="duration" id="duration_field" min="0" step="1" value="20" />
+            </p>
+            <p>
+                <label for="space">Time between appointments (in minutes)</label>
+                <input type="number" name="space" id="space_field" min="0" step="1" value="5" />
+            </p>
+        </fieldset>
+    </form>
 </template>
 

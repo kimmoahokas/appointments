@@ -9,17 +9,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                
+
                 <a class="brand" href="/">Tuija Appointment scheduler</a>
 
                 {{#if currentUser.profile.admin}}
                 <ul class="nav">
-                    <li><a href="/manage">Modify appointments</a></li>
+                    <li><a href="{{urlFor 'manage'}}">Modify appointments</a></li>
                 </ul>
                 {{/if}}
-                    
+
                 <div class="nav-collapse collapse">
-                    {{loginButtons}}    
+                    {{loginButtons}}
                 </div>
             </div>
         </div>
