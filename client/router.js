@@ -3,15 +3,19 @@ Router.map(function() {
         path: '/',
         renderTemplates: {
             'navbarTemplate': {to: 'navbar'},
-            'calendarTemplate': {to: 'calendar'},
-            'appointmentDetailsTemplate': {to: 'details'}
+            'reserveTemplate': {to: 'main'}
         }
     });
     this.route('manage', {
         renderTemplates: {
             'navbarTemplate': {to: 'navbar'},
-            'calendarTemplate': {to: 'calendar'}, // normal calendar for testing
-            'appointmentDetailsManageTemplate': {to: 'details'}
+            'manageAppointmentsTemplate': {to: 'main'}
+        }
+    });
+    this.route('my_appointments', {
+        renderTemplates: {
+            'navbarTemplate': {to: 'navbar'},
+            'appointmentListTemplate': {to: 'main'}
         }
     });
 });

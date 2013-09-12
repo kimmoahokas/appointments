@@ -10,13 +10,15 @@
                     <span class="icon-bar"></span>
                 </a>
 
-                <a class="brand" href="/">Tuija Appointment scheduler</a>
+                <a class="brand" href="{{urlFor 'home'}}">Tuija Appointment scheduler</a>
 
-                {{#if currentUser.profile.admin}}
                 <ul class="nav">
+                    <li><a href="{{urlFor 'home'}}">Book appointment</a></li>
+                    <li><a href="{{urlFor 'my_appointments'}}">My appointments</a></li>
+                    {{#if currentUser.profile.admin}}
                     <li><a href="{{urlFor 'manage'}}">Modify appointments</a></li>
+                    {{/if}}
                 </ul>
-                {{/if}}
 
                 <div class="nav-collapse collapse">
                     {{loginButtons}}

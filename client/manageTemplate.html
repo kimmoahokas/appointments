@@ -1,0 +1,47 @@
+<template name="manageAppointmentsTemplate">
+    <div class="container">
+        <div class="row">
+            <div class="span8">
+                <div id='manageCalendar'></div>
+            </div>
+            <div class="span4">
+                <form id="appointment_defaults">
+                    <fieldset>
+                        <legend>Appointment creation settings</legend>
+                        <p>
+                            <label for="name">Appointment name</label>
+                            <input type="text" name="name" id="name_field" value="Round 1"/>
+                        </p>
+                        <p>
+                            <label for="duration">Appointment duration (in minutes)</label>
+                            <input type="number" name="duration" id="duration_field" min="0" step="1" value="20" />
+                        </p>
+                        <p>
+                            <label for="space">Time between appointments (in minutes)</label>
+                            <input type="number" name="space" id="space_field" min="0" step="1" value="5" />
+                        </p>
+                    </fieldset>
+                </form>
+                <form id="appointment_edit">
+                    <fieldset>
+                        <legend>Selected appointment details</legend>
+                        <p>
+                            <label for="selected_name">Appointment name</label>
+                            <input type="text" name="selected_name" id="Selected_name_field" />
+                        </p>
+                        <p>
+                            <label for="selected_start">Start time</label>
+                            <input type="datetime-local" name="selected_start" id="Selected_start_field" />
+                        </p>
+                        <p>
+                            <label for="selected_end">End time</label>
+                            <input type="datetime-local" name="selected_end" id="Selected_end_field" />
+                        </p>
+                    </fieldset>
+                    <button id="update_appointment_button">Update appointment</button>
+                    <button id="delete_appointment_button">Delete appointment</button>
+                </form>
+            </div>
+        </div>
+    </div> <!-- /.container -->
+</template>
