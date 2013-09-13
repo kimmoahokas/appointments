@@ -5,7 +5,8 @@
       "jquery-ui": {},
       "fullcalendar": {},
       "iron-router": {},
-      "accounts-ui-bootstrap-dropdown": {}
+      "accounts-ui-bootstrap-dropdown": {},
+      "momentjs": {}
     },
     "packages": {
       "jquery-ui": {
@@ -27,6 +28,11 @@
         "git": "https://github.com/erobit/meteor-accounts-ui-bootstrap-dropdown.git",
         "tag": "v0.6.5.1",
         "commit": "c8b29d2e7f8611d6dec9d6d23c1c2b94e000b0fb"
+      },
+      "momentjs": {
+        "git": "https://github.com/crapthings/meteor-momentjs.git",
+        "tag": "v2.1.0.2",
+        "commit": "59a762e297082eea8b8cae00374c2b7ac6f89529"
       }
     }
   }

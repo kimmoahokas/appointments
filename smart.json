@@ -3,6 +3,7 @@
     "jquery-ui": {},
     "fullcalendar": {},
     "iron-router": {},
-    "accounts-ui-bootstrap-dropdown": {}
+    "accounts-ui-bootstrap-dropdown": {},
+    "momentjs": {}
   }
 }

@@ -9,6 +9,7 @@
                     <fieldset>
                         <legend>Appointment creation settings</legend>
                         <p>
+                            <!-- TODO: change this to round selection dropdown -->
                             <label for="name">Appointment name</label>
                             <input type="text" name="name" id="name_field" value="Round 1"/>
                         </p>
@@ -26,20 +27,22 @@
                     <fieldset>
                         <legend>Selected appointment details</legend>
                         <p>
+                            <!-- TODO: Add fields to show assistant and studet -->
+                            <!-- TODO: change this to round selection dropdown -->
                             <label for="selected_name">Appointment name</label>
-                            <input type="text" name="selected_name" id="Selected_name_field" />
+                            <input type="text" name="selected_name" id="selected_name" disabled="disabled" />
                         </p>
                         <p>
                             <label for="selected_start">Start time</label>
-                            <input type="datetime-local" name="selected_start" id="Selected_start_field" />
+                            <input type="datetime-local" name="selected_start" id="selected_start" disabled="disabled" />
                         </p>
                         <p>
                             <label for="selected_end">End time</label>
-                            <input type="datetime-local" name="selected_end" id="Selected_end_field" />
+                            <input type="datetime-local" name="selected_end" id="selected_end" disabled="disabled" />
                         </p>
                     </fieldset>
-                    <button id="update_appointment_button">Update appointment</button>
-                    <button id="delete_appointment_button">Delete appointment</button>
+                    <button id="update_appointment_button" type="button" disabled="disabled">Update appointment</button>
+                    <button id="delete_appointment_button" type="button" disabled="disabled">Delete appointment</button>
                 </form>
             </div>
         </div>
