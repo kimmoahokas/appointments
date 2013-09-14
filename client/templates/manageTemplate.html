@@ -1,50 +1,102 @@
 <template name="manageAppointmentsTemplate">
-    <div class="container">
-        <div class="row">
-            <div class="span8">
-                <div id='manageCalendar'></div>
+    {{#if currentUser.profile.admin}}
+        <div class="container">
+            <div class="row">
+                <div class="span8">
+                    <div id='manageCalendar'></div>
+                </div>
+                <div class="span4">
+                    <ul class="nav nav-tabs">
+                        <li class="active" id="manage-appointments-tab"><a>Manage appointments</a></li>
+                        <li id="manage-rounds-tab"><a>Manage rounds</a></li>
+                    </ul>
+                    <div id="appointment-admin">
+                        <form id="appointment_defaults">
+                            <fieldset>
+                                <legend>Appointment creation settings</legend>
+                                <p>
+                                    <label for="round">Appointment round</label>
+                                    <select id="round">
+                                        <option value="">Select round...</option>
+                                        <option value="">-------</option>
+                                        {{#each rounds}}
+                                            <option value="{{_id}}">{{name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </p>
+                                <p>
+                                    <label for="duration">Appointment duration (in minutes)</label>
+                                    <input type="number" name="duration" id="duration_field" min="0" step="1" value="20" />
+                                </p>
+                                <p>
+                                    <label for="space">Time between appointments (in minutes)</label>
+                                    <input type="number" name="space" id="space_field" min="0" step="1" value="5" />
+                                </p>
+                            </fieldset>
+                        </form>
+                        <form id="appointment_edit">
+                            <fieldset>
+                                <legend>Selected appointment details</legend>
+                                <p>
+                                    <!-- TODO: Add fields to show assistant and studet -->
+                                    <dl class="dl-horizontal">
+                                        <dt>Round</dt>
+                                        <dd id="round-title"></dd>
+                                        <dt>Assistant</dt>
+                                        <dd id="assistant-name"></dd>
+                                        <dt>Student</dt>
+                                        <dd id="student-name"></dd>
+                                    </dl>
+                                </p>
+                                <p>
+                                    <label for="selected_start">Start time</label>
+                                    <input type="datetime-local" name="selected_start" id="selected_start" disabled="disabled" />
+                                </p>
+                                <p>
+                                    <label for="selected_end">End time</label>
+                                    <input type="datetime-local" name="selected_end" id="selected_end" disabled="disabled" />
+                                </p>
+                            </fieldset>
+                            <button id="update_appointment_button" type="button" disabled="disabled">Update appointment</button>
+                            <button id="delete_appointment_button" type="button" disabled="disabled">Delete appointment</button>
+                        </form>
+                    </div>
+
+                    <div id="round-admin" class="hidden">
+                        <form id="round-edit">
+                            <fieldset>
+                                <p>
+                                    <label for="edit-round-select">Round</label>
+                                    <select name="edit-round-select" id="edit-round-select">
+                                        <option value="">Select round...</option>
+                                        <option value="add">Add new round</option>
+                                        <option value="">-------</option>
+                                        {{#each rounds}}
+                                            <option value="{{_id}}" {{selected _id}}>{{name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </p>
+                                <p>
+                                    <label for="round-open">Round reservation opens</label>
+                                    <input type="datetime-local" name="round-open" id="round-open" disabled="disabled" />
+                                </p>
+                                <p>
+                                    <label for="round-close">Round reservation closes</label>
+                                    <input type="datetime-local" name="round-close" id="round-close" disabled="disabled" />
+                                </p>
+                                <p>
+                                    <label for="max-reservations">Maximum number of reservations per student</label>
+                                    <input type="number" name="max-reservations" id="max-reservations" min="1" value="1" disabled="disabled" />
+                                </p>
+                            </fieldset>
+                             <button id="update_round_button" type="button" disabled="disabled">Update round</button>
+                            <button id="delete_round_button" type="button" disabled="disabled">Delete round</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="span4">
-                <form id="appointment_defaults">
-                    <fieldset>
-                        <legend>Appointment creation settings</legend>
-                        <p>
-                            <!-- TODO: change this to round selection dropdown -->
-                            <label for="name">Appointment name</label>
-                            <input type="text" name="name" id="name_field" value="Round 1"/>
-                        </p>
-                        <p>
-                            <label for="duration">Appointment duration (in minutes)</label>
-                            <input type="number" name="duration" id="duration_field" min="0" step="1" value="20" />
-                        </p>
-                        <p>
-                            <label for="space">Time between appointments (in minutes)</label>
-                            <input type="number" name="space" id="space_field" min="0" step="1" value="5" />
-                        </p>
-                    </fieldset>
-                </form>
-                <form id="appointment_edit">
-                    <fieldset>
-                        <legend>Selected appointment details</legend>
-                        <p>
-                            <!-- TODO: Add fields to show assistant and studet -->
-                            <!-- TODO: change this to round selection dropdown -->
-                            <label for="selected_name">Appointment name</label>
-                            <input type="text" name="selected_name" id="selected_name" disabled="disabled" />
-                        </p>
-                        <p>
-                            <label for="selected_start">Start time</label>
-                            <input type="datetime-local" name="selected_start" id="selected_start" disabled="disabled" />
-                        </p>
-                        <p>
-                            <label for="selected_end">End time</label>
-                            <input type="datetime-local" name="selected_end" id="selected_end" disabled="disabled" />
-                        </p>
-                    </fieldset>
-                    <button id="update_appointment_button" type="button" disabled="disabled">Update appointment</button>
-                    <button id="delete_appointment_button" type="button" disabled="disabled">Delete appointment</button>
-                </form>
-            </div>
-        </div>
-    </div> <!-- /.container -->
+        </div> <!-- /.container -->
+    {{else}}
+        <h1>Permission denied!<h1>
+    {{/if}}
 </template>

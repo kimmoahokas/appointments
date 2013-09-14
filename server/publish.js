@@ -12,3 +12,22 @@ Meteor.publish('all-appointments', function() {
         }
     }
 });
+
+Meteor.publish('all-rounds', function() {
+    if (this.userId) {
+        var user = Meteor.users.findOne(this.userId);
+        if (user.profile.admin) {
+            return Rounds.find();
+        }
+    }
+});
+
+
+Meteor.publish('all-users', function() {
+    if (this.userId) {
+        var user = Meteor.users.findOne(this.userId);
+        if (user.profile.admin) {
+            return Meteor.users.find();
+        }
+    }
+});
