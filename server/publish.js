@@ -21,10 +21,7 @@ Meteor.publish('available-appointments', function(roundId) {
             {
                 round: roundId,
                 start: {$gt: earliest},
-                $or: [
-                    {student: null},
-                    {student: this.userId}
-                ]
+                student: null
             },
             {fields: {assistant: 0}}
         );
