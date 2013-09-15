@@ -31,6 +31,20 @@ Meteor.publish('available-appointments', function(roundId) {
     }
 });
 
+Meteor.publish('my-appointments', function() {
+    if (this.userId) {
+        var now = new Date();
+        return Appointments.find(
+            {
+                $or: [
+                    {assistant: this.userId, student: {$ne: null}},
+                    {student: this.userId}
+                ]
+            },
+            {fields: {assistant: 0}}
+        );
+    }
+});
 
 // publish all events in db to admins
 Meteor.publish('all-appointments', function() {

@@ -2,7 +2,9 @@
     {{#if currentUser.profile.admin}}
         <div class="row">
             <div class="span8">
-                <div id='manageCalendar'></div>
+                {{#constant}}
+                    <div id='manageCalendar'></div>
+                {{/constant}}
             </div>
             <div class="span4">
                 <ul class="nav nav-tabs">

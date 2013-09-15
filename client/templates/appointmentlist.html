@@ -1,3 +1,25 @@
 <template name="appointmentListTemplate">
     <h1>List of your appointments</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Title</td>
+                <td>Start time</td>
+                <td>End time</td>
+                <td>Assistant</td>
+                <td>Student</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each appointments}}
+                <tr>
+                    <td>{{title}}</td>
+                    <td>{{start}}</td>
+                    <td>{{end}}</td>
+                    <td>{{assistant}}</td>
+                    <td>{{student}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </template>
