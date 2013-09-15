@@ -20,11 +20,11 @@ Meteor.publish('available-appointments', function(roundId) {
         return Appointments.find(
             {
                 round: roundId,
+                start: {$gt: earliest},
                 $or: [
                     {student: null},
                     {student: this.userId}
-                ],
-                start: {$gt: earliest}
+                ]
             },
             {fields: {assistant: 0}}
         );
