@@ -1,4 +1,8 @@
-Meteor.subscribe('available-appointments', Session.get('selectedRound'));
+
+Deps.autorun(function() {
+    Meteor.subscribe('available-appointments', Session.get('selectedRound'));
+});
+
 var reserveCalendar;
 
 Template.reserveTemplate.rendered = function() {
