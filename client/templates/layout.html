@@ -1,5 +1,10 @@
 <template name="layout">
     <head><title>Lab course appointment scheduler</title></head>
     {{yield 'navbar'}}
-    {{yield 'main'}}
+    <div class="container">
+        {{yield}}
+        <footer>
+            <p>&copy; Kimmo Ahokas and Antti Tolonen 2013. In case of problems contact T-110.5102@list.aalto.fi</p>
+        </footer>
+    </div>
 </template>

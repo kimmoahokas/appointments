@@ -1,5 +1,34 @@
-Meteor.publish("available-appointments", function(roundId) {
-    return Rounds.find(roundId);
+Meteor.publish('available-rounds', function() {
+    if (this.userId) {
+        var now = new Date();
+        return Rounds.find({
+            opens: {$lte: now},
+            closes: {$gte: now}
+        });
+    }
+});
+
+Meteor.publish('available-appointments', function(roundId) {
+    if (this.userId) {
+        // if clock is over 18, don't allow reservations for tomorrow
+        var earliest;
+        if (moment().hour() >= 18) {
+            earliest = moment().add('days', 2).startOf('day').toDate();
+        } else {
+            earliest = moment().add('days', 1).startOf('day').toDate();
+        }
+        return Appointments.find(
+            {
+                round: roundId,
+                $or: [
+                    {student: null},
+                    {student: this.userId}
+                ],
+                start: {$gt: earliest}
+            },
+            {fields: {assistant: 0}}
+        );
+    }
 });
 
 

@@ -1,5 +1,6 @@
 var appointmentHandle = Meteor.subscribe('all-appointments');
 var roundHandle = Meteor.subscribe('all-rounds');
+var userHandle = Meteor.subscribe('all-users');
 var manageCalendar;
 
 Template.manageAppointmentsTemplate.rendered = function() {
@@ -43,6 +44,7 @@ var createAppointments = function(startDate, endDate) {
     var duration = parseInt($('#duration_field').val(),10);
     var space = parseInt($('#space_field').val(),10);
 
+    //TODO: check that appointments are in the ROUNDrange?
     var currentTime = startDate;
     while(currentTime < endDate) {
         var end = addMinutes(currentTime, duration);
@@ -70,6 +72,7 @@ var addMinutes = function(date, minutes) {
 Template.manageAppointmentsTemplate.events({
     'click #update_appointment_button': function(event) {
         if (Session.get('editEventId')) {
+            //TODO: check that appointments are in the reserved range?
             Appointments.update({_id: Session.get('editEventId')}, {
                 $set: {
                     start: moment($('#selected_start').val()).toDate(),
@@ -132,8 +135,8 @@ Template.manageAppointmentsTemplate.events({
         if(Session.get('editRoundId')) {
             Rounds.update({_id: Session.get('editRoundId')}, {
                 $set: {
-                    opens: $('#round-open').val(),
-                    closes: $('#round-close').val(),
+                    opens: moment($('#round-open').val()).toDate(),
+                    closes: moment($('#round-close').val()).toDate(),
                     max_reservations: $('#max-reservations').val()
                 }
             });
@@ -174,7 +177,7 @@ var setAppointmentEditFields = function (appointment) {
         $('dd#round-title').html(appointment.title);
         $('dd#assistant-name').html(assistant.username);
         if (student) {
-            $('dd#student-name').html(student);
+            $('dd#student-name').html(student.username);
         } else {
             $('dd#student-name').html('Not reserved');
         }

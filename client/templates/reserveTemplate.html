@@ -1,12 +1,21 @@
 <template name='reserveTemplate'>
-    <div class="container">
-        <div class="row">
-            <div class="span8">
-                <div id='reserveCalendar'></div>
-            </div>
-            <div class="span4">
-                <h3>Appointment details will be shown here</h3>
-            </div>
+    <div class="row">
+        <div class="span8">
+            <div id='reserveCalendar'></div>
+        </div>
+        <div class="span4">
+            <h3>Appointment details</h3>
+            <dl class="dl-horizontal">
+                <dt>Round</dt>
+                <dd id="reserve-round-title"></dd>
+                <dt>Student</dt>
+                <dd id="reserve-student-name"></dd>
+                <dt>Start time</dt>
+                <dd id="reserve-start"></dd>
+                <dt>End time</dt>
+                <dd id="reserve-end"></dd>
+            </dl>
+            <button id="reserve-appointment-button" disabled="disabled">Reserve appointment</button>
         </div>
     </div>
 </template>

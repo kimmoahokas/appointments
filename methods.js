@@ -1,27 +1,65 @@
 //Define database update/fetch methods for clients
 
 Meteor.methods({
-    reserveAppoinment: function(appointmentId) {
+    reserveAppointment: function(appointmentId) {
+        console.log('running reserveAppoinment method');
         check(appointmentId, String);
+        if(!this.userId) {
+            throw new Meteor.Error(403, 'You must be logged in to reserve appointment!');
+        }
+
         var appointment = Appointments.findOne(appointmentId);
         if(!appointment) {
-            throw new Meteor.Error(404, "Invalid appointment!");
+            throw new Meteor.Error(403, 'Invalid appointment!');
         }
         if (appointment.student) {
-            throw new Meteor.Error(404, "Appointment already reserved!");
+            throw new Meteor.Error(403, 'Appointment already reserved!');
         }
-        Appointments.update(appointmentId, {$set: {student: this.userId}});
+        var student = Meteor.users.findOne(this.userId);
+        var assistant = Meteor.users.findOne(appointment.assistant);
+        if(Meteor.isServer && student && assistant) {
+            Appointments.update(appointmentId, {$set: {student: this.userId}});
+            var mail = {
+                from: 'T-110.5102@list.aalto.fi',
+                to: contactEmail(student),
+                replyTo: 'T-110.5102@list.aalto.fi',
+                subject: 'T-110.5102 Appointment',
+                text:
+"You have just reserved appointment on course\n" +
+"T-110.5102 Laboratory Works in Networking and Security\n" +
+"Details:\n" +
+"   Start: " + moment(appointment.start).format('LLLL') + "\n" +
+"   End: " + moment(appointment.end).format('LLLL') + "\n" +
+"   Location: Computer Science building room A120 (Playroom)\n" +
+"   Student: " + student.username + "\n" +
+"Remember to be on time!\n" +
+"If you can't come to appointment, contact course email immediately!\n\n" +
+"Best regards,\n" +
+"T-110.5102 Staff\n"
+            };
+
+            // Send two separate emails so that students don't see assistant name
+            Email.send(mail);
+            mail.to = contactEmail(assistant);
+            Email.send(mail);
+            return true;
+        }
     },
     deleteRoundAppointments: function(roundId) {
-        if (this.isSimulation) {
-            console.log('deleteRoundAppointments stub in action', roundId);
-        } else {
-            if (this.usrId) {
-                user = Meteor.users.findOne(this.userId);
-                if (user.profile.admin) {
-                    Appointments.remove({round: roundId});
-                }
+        check(roundId, String);
+        if (this.userId && Meteor.isServer) {
+            user = Meteor.users.findOne(this.userId);
+            if (user.profile.admin) {
+                Appointments.remove({round: roundId});
             }
+            return true;
         }
     }
 });
+
+var contactEmail = function (user) {
+    if (user.emails && user.emails.length) {
+        return user.emails[0].address;
+    }
+    return null;
+};

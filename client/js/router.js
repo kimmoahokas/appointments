@@ -1,27 +1,44 @@
-Router.map(function() {
-    this.route('home', {
-        path: '/',
-        renderTemplates: {
-            'navbarTemplate': {to: 'navbar'},
-            'reserveTemplate': {to: 'main'}
-        }
-    });
-    this.route('manage', {
-        renderTemplates: {
-            'navbarTemplate': {to: 'navbar'},
-            'manageAppointmentsTemplate': {to: 'main'}
-        }
-    });
-    this.route('my_appointments', {
-        renderTemplates: {
-            'navbarTemplate': {to: 'navbar'},
-            'appointmentListTemplate': {to: 'main'}
-        }
-    });
-});
-
 Router.configure({
     layout: 'layout',
     //notFoundTemplate: 'notFound',
     //loadingTemplate: 'loading'
+    renderTemplates: {
+        'navbarTemplate': {to: 'navbar'}
+    }
 });
+
+Router.map(function() {
+    this.route('home', {
+        path: '/',
+        template: 'selectRound',
+        data: function() {
+            var now = new Date();
+            var rounds = Rounds.find({
+                opens: {$lte: now},
+                closes: {$gte: now}
+            });
+            return {rounds:rounds};
+        }
+    });
+    this.route('reserve', {
+        path: '/round/:_id',
+        controller: 'ReserveController',
+    });
+    this.route('manage', {
+        template:'manageAppointmentsTemplate',
+    });
+    this.route('my_appointments', {
+        template: 'appointmentListTemplate',
+    });
+});
+
+ReserveController = RouteController.extend({
+    template:'reserveTemplate',
+
+    run: function() {
+        Session.set('selectedRound', this.params._id);
+        this.render({'navbarTemplate': {to: 'navbar'}});
+        this.render('reserveTemplate');
+    }
+});
+
