@@ -167,6 +167,8 @@ Template.manageAppointmentsTemplate.selected = function(id) {
     }
 };
 
+//Terrible hack to prevent template from rerendering and destroying the calendar component
+//TODO: proper protection to calendar, move these to template
 var setAppointmentEditFields = function (appointment) {
     // This is actually an ugly hack, better move these to template
     if (appointment) {
@@ -200,6 +202,8 @@ var setAppointmentEditFields = function (appointment) {
     }
 };
 
+//Terrible hack to prevent template from rerendering and destroying the calendar component
+//TODO: proper protection to calendar, move these to template
 var setRoundEditFields = function (round) {
     if (round) {
         var s = moment(round.opens);

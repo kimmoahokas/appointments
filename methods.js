@@ -2,7 +2,6 @@
 
 Meteor.methods({
     reserveAppointment: function(appointmentId) {
-        console.log('running reserveAppoinment method');
         check(appointmentId, String);
         if(!this.userId) {
             throw new Meteor.Error(403, 'You must be logged in to reserve appointment!');
@@ -32,8 +31,51 @@ Meteor.methods({
 "   End: " + moment(appointment.end).format('LLLL') + "\n" +
 "   Location: Computer Science building room A120 (Playroom)\n" +
 "   Student: " + student.username + "\n" +
+"You can cancell this appointment until " + moment(appointment.editEnds).format('LLLL') + "\n" +
+"To cancel go to " + Router.url('my_appointments') + '\n' +
 "Remember to be on time!\n" +
 "If you can't come to appointment, contact course email immediately!\n\n" +
+"Best regards,\n" +
+"T-110.5102 Staff\n"
+            };
+
+            // Send two separate emails so that students don't see assistant name
+            Email.send(mail);
+            mail.to = contactEmail(assistant);
+            Email.send(mail);
+            return true;
+        }
+    },
+    cancelAppointment: function(appointmentId) {
+        check(appointmentId, String);
+        if(!this.userId) {
+            throw new Meteor.Error(403, 'You must be logged in to cancel appointment!');
+        }
+
+        var appointment = Appointments.findOne(appointmentId);
+        if(!appointment) {
+            throw new Meteor.Error(403, 'Invalid appointment!');
+        }
+        if (appointment.student != this.userId) {
+            throw new Meteor.Error(403, 'You have not reserved this appointment!');
+        }
+        if(Meteor.isServer) {
+            var student = Meteor.users.findOne(this.userId);
+            var assistant = Meteor.users.findOne(appointment.assistant);
+            Appointments.update(appointmentId, {$set: {student: null}});
+            var mail = {
+                from: 'T-110.5102@list.aalto.fi',
+                to: contactEmail(student),
+                replyTo: 'T-110.5102@list.aalto.fi',
+                subject: 'T-110.5102 Appointment cancelled',
+                text:
+"You have just cancelled appointment on course\n" +
+"T-110.5102 Laboratory Works in Networking and Security\n" +
+"Details:\n" +
+"   Start: " + moment(appointment.start).format('LLLL') + "\n" +
+"   End: " + moment(appointment.end).format('LLLL') + "\n" +
+"   Location: Computer Science building room A120 (Playroom)\n" +
+"   Student: " + student.username + "\n\n" +
 "Best regards,\n" +
 "T-110.5102 Staff\n"
             };

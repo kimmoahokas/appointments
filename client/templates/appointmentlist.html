@@ -8,16 +8,23 @@
                 <td>End time</td>
                 <td>Assistant</td>
                 <td>Student</td>
+                <td>Cancellation dl</td>
             </tr>
         </thead>
         <tbody>
             {{#each appointments}}
                 <tr>
                     <td>{{title}}</td>
-                    <td>{{start}}</td>
-                    <td>{{end}}</td>
-                    <td>{{assistant}}</td>
-                    <td>{{student}}</td>
+                    <td>{{formatDate start}}</td>
+                    <td>{{formatDate end}}</td>
+                    <td>{{getUserName assistant}}</td>
+                    <td>{{getUserName student}}</td>
+                    <td>{{formatDate editEnds}}</td>
+                    <td>
+                        {{#if canCancel editEnds}}
+                            <button class="appointment-cancel-button" type="button" value="{{_id}}">Cancel</button>
+                        {{/if}}
+                    </td>
                 </tr>
             {{/each}}
         </tbody>

@@ -9,23 +9,36 @@ Template.appointmentListTemplate.appointments = function() {
             {student: Meteor.userId()}
         ]
     }, {
-        sort: {start : 1},
-        transform: function(app) {
-            var student = Meteor.users.findOne(app.student);
-            if (student) {
-                app.student = student.username;
-            }
-            var assistant = Meteor.users.findOne(app.assistant);
-            if (assistant) {
-                app.assistant = assistant.username;
-            } else {
-                app.assistant = "Not available";
-            }
-
-            app.start = moment(app.start).format('LLLL');
-            app.end = moment(app.end).format('LLLL');
-            return app;
-        }
+        sort: {start : 1}
     });
     return appointments;
 };
+
+Template.appointmentListTemplate.canCancel = function(editEnds) {
+    return new Date() < editEnds;
+};
+
+Template.appointmentListTemplate.getUserName = function(userId) {
+    var user = Meteor.users.findOne(userId);
+    return user ? user.username : 'Not available';
+};
+
+Template.appointmentListTemplate.formatDate = function(date) {
+    return moment(date).format('llll');
+};
+
+Template.appointmentListTemplate.events({
+    'click .appointment-cancel-button': function(event) {
+        var result = confirm('Cancel this appointment?');
+        if (result) {
+            var appointmentId = event.target.value;
+            Meteor.call('cancelAppointment', appointmentId, function(error, result) {
+                if(!error) {
+                    alert('Appointment succesfully cancelled!');
+                } else {
+                    alert('Error occured, please contact course email!');
+                }
+            });
+        }
+    },
+});
