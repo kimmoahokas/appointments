@@ -15,7 +15,8 @@ Template.appointmentListTemplate.appointments = function() {
 };
 
 Template.appointmentListTemplate.canCancel = function(editEnds) {
-    return new Date() < editEnds;
+    //this = appointment, only students can cancel appointments
+    return new Date() < editEnds && Meteor.userId() === this.assistant;
 };
 
 Template.appointmentListTemplate.getUserName = function(userId) {
@@ -36,7 +37,7 @@ Template.appointmentListTemplate.events({
                 if(!error) {
                     alert('Appointment succesfully cancelled!');
                 } else {
-                    alert('Error occured, please contact course email!');
+                    alert('Error occured, please contact course email! Details: ' + error.reason);
                 }
             });
         }

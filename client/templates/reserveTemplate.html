@@ -7,17 +7,22 @@
         </div>
         <div class="span4">
             <h3>Appointment details</h3>
-            <dl class="dl-horizontal">
-                <dt>Round</dt>
-                <dd id="reserve-round-title"></dd>
-                <dt>Student</dt>
-                <dd id="reserve-student-name"></dd>
-                <dt>Start time</dt>
-                <dd id="reserve-start"></dd>
-                <dt>End time</dt>
-                <dd id="reserve-end"></dd>
-            </dl>
-            <button id="reserve-appointment-button" disabled="disabled">Reserve appointment</button>
+            {{#with selectedAppointment}}
+                <dl class="dl-horizontal">
+                    <dt>Round</dt>
+                    <dd id="reserve-round-title">{{title}}</dd>
+                    <dt>Student</dt>
+                    <dd id="reserve-student-name">{{getUserName student}}</dd>
+                    <dt>Start time</dt>
+                    <dd id="reserve-start">{{formatDate start}}</dd>
+                    <dt>End time</dt>
+                    <dd id="reserve-end">{{formatDate end}}</dd>
+                </dl>
+                <button id="reserve-appointment-button" type="button" value="{{_id}}" {{#unless canReserve editEnds}}disabled="disabled"{{/unless}}>Reserve appointment</button>
+                <button id="cancel-appointment-button" type="button" value="{{_id}}" {{#unless canCancel editEnds}}disabled="disabled"{{/unless}}>Cancel appointment</button>
+            {{else}}
+                <p>Click on apppointment to see it's details<p>
+            {{/with}}
         </div>
     </div>
 </template>

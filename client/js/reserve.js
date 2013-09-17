@@ -5,7 +5,9 @@ Deps.autorun(function() {
 
 var reserveCalendar;
 
-Template.reserveTemplate.rendered = function() {
+var initReserveCalendar = function() {
+    //initialize the calendar. remember to wrap the target div in template
+    //with {{#constant}}{{/constant}} to protect it from meteor live updates
     reserveCalendar = $('#reserveCalendar').fullCalendar({
         weekends: false,
         defaultView: 'agendaWeek',
@@ -25,7 +27,6 @@ Template.reserveTemplate.rendered = function() {
                 start: {$gte: start},
                 end: {$lte: end}
             }).fetch();
-            //TODO: color reserved appointments?
             callback(events);
         },
         eventClick: function(event) {
@@ -36,6 +37,13 @@ Template.reserveTemplate.rendered = function() {
     });
 };
 
+Template.reserveTemplate.rendered = function() {
+    if (!this._calendarRendered) {
+        initReserveCalendar();
+        this._calendarRendered = true;
+    }
+};
+
 Template.reserveTemplate.events({
     'click #reserve-appointment-button': function(event) {
         if(Session.get('selectedAppointment')) {
@@ -43,43 +51,47 @@ Template.reserveTemplate.events({
                 if(!error) {
                     alert('Appointment succesfully reserved!');
                 } else {
-                    alert('Error occured! Please contact course staff');
+                    alert('Error occured! Please contact course staff. Details: ' + error);
+                }
+            });
+        }
+    },
+    'click #cancel-appointment-button': function(event) {
+        var result = confirm('Cancel this appointment?');
+        if (result) {
+            var appointmentId = event.target.value;
+            Meteor.call('cancelAppointment', appointmentId, function(error, result) {
+                if(!error) {
+                    alert('Appointment succesfully cancelled!');
+                } else {
+                    alert('Error occured, please contact course email! Details: ' + error.reason);
                 }
             });
         }
     }
 });
 
-var showAppointmentDetails = function(appointment) {
-    if(appointment) {
-        $('#reserve-round-title').html(appointment.title);
-        $('#reserve-start').html(moment(appointment.start).format('LLLL'));
-        $('#reserve-end').html(moment(appointment.end).format('LLLL'));
-        if (appointment.student) {
-            var student = Meteor.users.findOne(appointment.student);
-            $('#reserve-student-name').html(student.username);
-        } else {
-            $('#reserve-student-name').html('Not reserved');
-        }
-        $('#reserve-appointment-button').prop('disabled', false);
-    } else {
-        $('#reserve-round-title').html('');
-        $('#reserve-start').html('');
-        $('#reserve-end').html('');
-        $('#reserve-student-name').html('student.username');
-        $('#reserve-appointment-button').prop('disabled', true);
-    }
+Template.reserveTemplate.selectedAppointment = function() {
+    return Appointments.findOne(Session.get('selectedAppointment'));
 };
 
-// On event click show event details
-Deps.autorun(function() {
-    if (Session.get('selectedAppointment')) {
-        var appointment = Appointments.findOne({_id: Session.get('selectedAppointment')});
-        showAppointmentDetails(appointment);
-    } else {
-        showAppointmentDetails();
-    }
-});
+Template.reserveTemplate.getUserName = function(userId) {
+    var user = Meteor.users.findOne(userId);
+    return user ? user.username : 'Not available';
+};
+
+Template.reserveTemplate.formatDate = function(date) {
+    return moment(date).format('llll');
+};
+
+Template.reserveTemplate.canReserve = function(editEnds) {
+    return new Date() < editEnds && this.student === null;
+};
+
+Template.reserveTemplate.canCancel = function(editEnds) {
+    return new Date() < editEnds &&
+    (this.student === Meteor.userId() || (this.student !== null && this.assistant === Meteor.userId()));
+};
 
 // Refresh calendar widget on data change
 Deps.autorun(function() {

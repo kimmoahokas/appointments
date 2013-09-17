@@ -3,7 +3,9 @@ var roundHandle = Meteor.subscribe('all-rounds');
 var userHandle = Meteor.subscribe('all-users');
 var manageCalendar;
 
-Template.manageAppointmentsTemplate.rendered = function() {
+var initManageCalendar = function() {
+    //initialize the calendar. remember to wrap the target div in template
+    //with {{#constant}}{{/constant}} to protect it from meteor live updates
     manageCalendar = $('#manageCalendar').fullCalendar({
         weekends: false,
         defaultView: 'agendaWeek',
@@ -20,6 +22,10 @@ Template.manageAppointmentsTemplate.rendered = function() {
             callback(events);
         },
         select: function(startDate, endDate) {
+            if($('select#round option:selected').val() === '') {
+                alert('Please select round before creating slots');
+                return;
+            }
             if(!Meteor.user() || !Meteor.user().profile.admin) {
                 //only admins can create appointments
                 return;
@@ -27,14 +33,20 @@ Template.manageAppointmentsTemplate.rendered = function() {
             createAppointments(startDate, endDate);
         },
         eventClick: function(event) {
-            Session.set('editEventId', event['_id']);
+            Session.set('editedAppointmentId', event['_id']);
             // Force DOM re-render
-            Deps.flush();
+            //Deps.flush();
             return false;
         }
     });
 };
 
+Template.manageAppointmentsTemplate.rendered = function() {
+    if (!this._calendarRendered) {
+        initManageCalendar();
+        this._calendarRendered = true;
+    }
+};
 
 var createAppointments = function(startDate, endDate) {
     var name = $('select#round option:selected').text();
@@ -69,39 +81,33 @@ var addMinutes = function(date, minutes) {
 
 Template.manageAppointmentsTemplate.events({
     'click #update_appointment_button': function(event) {
-        if (Session.get('editEventId')) {
+        if (Session.get('editedAppointmentId')) {
             //TODO: check that appointments are in the reserved range?
-            Appointments.update({_id: Session.get('editEventId')}, {
+            Appointments.update({_id: Session.get('editedAppointmentId')}, {
                 $set: {
                     start: moment($('#selected_start').val()).toDate(),
                     end: moment($('#selected_end').val()).toDate()
                 }
             });
             $('#manageCalendar').fullCalendar('refetchEvents');
-            Session.set('editEventId', null);
+            Session.set('editedAppointmentId', null);
         }
         return false;
     },
     'click #delete_appointment_button': function(event) {
-        if (Session.get('editEventId')) {
-             Appointments.remove(Session.get('editEventId'));
-             Session.set('editEventId', null);
+        if (Session.get('editedAppointmentId')) {
+             Appointments.remove(Session.get('editedAppointmentId'));
+             Session.set('editedAppointmentId', null);
         }
         return false;
     },
+    //The following two events could probably be handled more elegantly with two
+    //templates and router
     'click #manage-appointments-tab': function(event) {
-        //change tabs on right
-        $('li#manage-appointments-tab').addClass('active');
-        $('li#manage-rounds-tab').removeClass('active');
-        $('div#appointment-admin').removeClass('hidden');
-        $('div#round-admin').addClass('hidden');
+        Session.set('selectedTab', 'manageAppointments');
     },
     'click #manage-rounds-tab': function(event) {
-        //change tabs on right
-        $('li#manage-appointments-tab').removeClass('active');
-        $('li#manage-rounds-tab').addClass('active');
-        $('div#appointment-admin').addClass('hidden');
-        $('div#round-admin').removeClass('hidden');
+        Session.set('selectedTab', 'manageRounds');
     },
     'change #edit-round-select': function(event) {
         var value = $('#edit-round-select option:selected').val();
@@ -126,7 +132,7 @@ Template.manageAppointmentsTemplate.events({
         } else {
             Session.set('editRoundId', value);
             //update DOM so we can modify selection
-            Deps.flush();
+            //Deps.flush();
         }
     },
     'click #update_round_button': function(event) {
@@ -148,102 +154,51 @@ Template.manageAppointmentsTemplate.events({
              console.log(result);
              Session.set('editRoundId', null);
              //update DOM so we can modify selection
-            Deps.flush();
+            //Deps.flush();
 
         }
         return false;
     }
 });
 
-Template.manageAppointmentsTemplate.rounds = function() {
-    return Rounds.find();
+//H elpers sahred with all three templates
+// Helpers defined this way, because three templates share couple of helpers
+var helpers = {
+    rounds: function() {
+        return Rounds.find();
+    },
+
+    getUserName: function(userId) {
+        var user = Meteor.users.findOne(userId);
+        return user ? user.username : 'Not available';
+    },
+    toDate: function(date) {
+        return moment(date).format('YYYY-MM-DD[T]HH:mm');
+    }
 };
 
-Template.manageAppointmentsTemplate.selected = function(id) {
+// helper to select correct tab in "main" template
+Template.manageAppointmentsTemplate.isSelectedTab = function(tab) {
+    return tab === Session.get('selectedTab');
+};
+
+//helpers for appoint management template
+Template.manageAppointmentTab.helpers(helpers);
+Template.manageAppointmentTab.editedAppointment = function() {
+    return Appointments.findOne(Session.get('editedAppointmentId'));
+};
+
+
+//helpers for round management template
+Template.manageRoundTab.helpers(helpers);
+Template.manageRoundTab.currentRound = function() {
+    return Rounds.findOne(Session.get('editRoundId'));
+};
+Template.manageRoundTab.selected = function(id) {
     if(id === Session.get('editRoundId')) {
         return 'selected="selected"';
     }
 };
-
-//Terrible hack to prevent template from rerendering and destroying the calendar component
-//TODO: proper protection to calendar, move these to template
-var setAppointmentEditFields = function (appointment) {
-    // This is actually an ugly hack, better move these to template
-    if (appointment) {
-        var s = moment(appointment.start);
-        var e = moment(appointment.end);
-        var assistant = Meteor.users.findOne(appointment.assistant);
-        var student = Meteor.users.findOne(appointment.student);
-        $('dd#round-title').html(appointment.title);
-        $('dd#assistant-name').html(assistant.username);
-        if (student) {
-            $('dd#student-name').html(student.username);
-        } else {
-            $('dd#student-name').html('Not reserved');
-        }
-        $('#selected_start').val(s.format('YYYY-MM-DD[T]HH:mm'));
-        $('#selected_end').val(e.format('YYYY-MM-DD[T]HH:mm'));
-        $('#selected_start').prop('disabled', false);
-        $('#selected_end').prop('disabled', false);
-        $('#update_appointment_button').prop('disabled', false);
-        $('#delete_appointment_button').prop('disabled', false);
-    } else {
-        $('dd#round-title').html('');
-        $('dd#assistant-name').html('');
-        $('dd#student-name').html('');
-        $('#selected_start').val('');
-        $('#selected_end').val('');
-        $('#selected_start').prop('disabled', true);
-        $('#selected_end').prop('disabled', true);
-        $('#update_appointment_button').prop('disabled', true);
-        $('#delete_appointment_button').prop('disabled', true);
-    }
-};
-
-//Terrible hack to prevent template from rerendering and destroying the calendar component
-//TODO: proper protection to calendar, move these to template
-var setRoundEditFields = function (round) {
-    if (round) {
-        var s = moment(round.opens);
-        var e = moment(round.closes);
-        $('#round-open').val(s.format('YYYY-MM-DD[T]HH:mm'));
-        $('#round-close').val(e.format('YYYY-MM-DD[T]HH:mm'));
-        $('#max-reservations').val(round.max_reservations);
-        $('#round-open').prop('disabled', false);
-        $('#round-close').prop('disabled', false);
-        $('#max-reservations').prop('disabled', false);
-        $('#delete_round_button').prop('disabled', false);
-        $('#update_round_button').prop('disabled', false);
-    } else {
-        $('#round-open').val('');
-        $('#round-close').val('');
-        $('#max-reservations').val('');
-        $('#round-open').prop('disabled', true);
-        $('#round-close').prop('disabled', true);
-        $('#max-reservations').prop('disabled', true);
-        $('#delete_round_button').prop('disabled', true);
-        $('#update_round_button').prop('disabled', true);
-    }
-};
-
-// On event click set event details to modification form
-Deps.autorun(function() {
-    if (Session.get('editEventId')) {
-        var appointment = Appointments.findOne({_id: Session.get('editEventId')});
-        setAppointmentEditFields(appointment);
-    } else {
-        setAppointmentEditFields();
-    }
-});
-
-Deps.autorun(function() {
-    if (Session.get('editRoundId')) {
-        var round = Rounds.findOne({_id: Session.get('editRoundId')});
-        setRoundEditFields(round);
-    } else {
-        setRoundEditFields();
-    }
-});
 
 // Refresh calendar widget on data change
 Deps.autorun(function() {
