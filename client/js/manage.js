@@ -4,37 +4,35 @@ var userHandle = Meteor.subscribe('all-users');
 var manageCalendar;
 
 Template.manageAppointmentsTemplate.rendered = function() {
-    if (!manageCalendar) {
-        manageCalendar = $('#manageCalendar').fullCalendar({
-            weekends: false,
-            defaultView: 'agendaWeek',
-            allDaySlot: false,
-            columnFormat: 'ddd d.M.',
-            selectable: true,
-            editable: true,
-            events: function(start, end, callback) {
-                var events = Appointments.find({$and: [
-                    {start: {$gte: start}},
-                    {end: {$lte: end}}
-                ]}).fetch();
-                //TODO: color reserved appointments?
-                callback(events);
-            },
-            select: function(startDate, endDate) {
-                if(!Meteor.user() || !Meteor.user().profile.admin) {
-                    //only admins can create appointments
-                    return;
-                }
-                createAppointments(startDate, endDate);
-            },
-            eventClick: function(event) {
-                Session.set('editEventId', event['_id']);
-                // Force DOM re-render
-                Deps.flush();
-                return false;
+    manageCalendar = $('#manageCalendar').fullCalendar({
+        weekends: false,
+        defaultView: 'agendaWeek',
+        allDaySlot: false,
+        columnFormat: 'ddd d.M.',
+        selectable: true,
+        editable: true,
+        events: function(start, end, callback) {
+            var events = Appointments.find({$and: [
+                {start: {$gte: start}},
+                {end: {$lte: end}}
+            ]}).fetch();
+            //TODO: color reserved appointments?
+            callback(events);
+        },
+        select: function(startDate, endDate) {
+            if(!Meteor.user() || !Meteor.user().profile.admin) {
+                //only admins can create appointments
+                return;
             }
-        });
-    }
+            createAppointments(startDate, endDate);
+        },
+        eventClick: function(event) {
+            Session.set('editEventId', event['_id']);
+            // Force DOM re-render
+            Deps.flush();
+            return false;
+        }
+    });
 };
 
 

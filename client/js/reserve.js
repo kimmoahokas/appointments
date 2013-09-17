@@ -6,36 +6,34 @@ Deps.autorun(function() {
 var reserveCalendar;
 
 Template.reserveTemplate.rendered = function() {
-    if (!reserveCalendar) {
-        var manageCalendar = $('#reserveCalendar').fullCalendar({
-            weekends: false,
-            defaultView: 'agendaWeek',
-            allDaySlot: false,
-            columnFormat: 'ddd d.M.',
-            selectable: false,
-            //the calendar must be editable, so we can modify it after creation
-            editable: true,
-            eventColor: 'blue',
-            events: function(start, end, callback) {
-                var events = Appointments.find({
-                    round: Session.get('selectedRound'),
-                    $or: [
-                        {student: null},
-                        {student: Meteor.userId()}
-                    ],
-                    start: {$gte: start},
-                    end: {$lte: end}
-                }).fetch();
-                //TODO: color reserved appointments?
-                callback(events);
-            },
-            eventClick: function(event) {
-                Session.set('selectedAppointment', event._id);
-                Deps.flush();
-                return false;
-            }
-        });
-    }
+    reserveCalendar = $('#reserveCalendar').fullCalendar({
+        weekends: false,
+        defaultView: 'agendaWeek',
+        allDaySlot: false,
+        columnFormat: 'ddd d.M.',
+        selectable: false,
+        //the calendar must be editable, so we can modify it after creation
+        editable: true,
+        eventColor: 'blue',
+        events: function(start, end, callback) {
+            var events = Appointments.find({
+                round: Session.get('selectedRound'),
+                $or: [
+                    {student: null},
+                    {student: Meteor.userId()}
+                ],
+                start: {$gte: start},
+                end: {$lte: end}
+            }).fetch();
+            //TODO: color reserved appointments?
+            callback(events);
+        },
+        eventClick: function(event) {
+            Session.set('selectedAppointment', event._id);
+            Deps.flush();
+            return false;
+        }
+    });
 };
 
 Template.reserveTemplate.events({
