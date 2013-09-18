@@ -11,22 +11,22 @@
                 </a>
 
                 <a class="brand" href="{{urlFor 'home'}}">Tuija Appointment scheduler</a>
-
-                <ul class="nav">
-                    <li><a href="{{urlFor 'home'}}">Reserve appointment</a></li>
-                    <li><a href="{{urlFor 'my_appointments'}}">My appointments</a></li>
-                    {{#if currentUser.profile.admin}}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Admin<b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{urlFor 'manage'}}">Manage appointments</a></li>
-                                <li><a href="{{urlFor 'manage_users'}}">Manage users</a></li>
-                            </ul>
-                    {{/if}}
-                </ul>
-
+                {{#if currentUser}}
+                    <ul class="nav">
+                        <li><a href="{{urlFor 'home'}}">Reserve appointment</a></li>
+                        <li><a href="{{urlFor 'my_appointments'}}">My appointments</a></li>
+                        {{#if currentUser.profile.admin}}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    Admin<b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{urlFor 'manage'}}">Manage appointments</a></li>
+                                    <li><a href="{{urlFor 'manage_users'}}">Manage users</a></li>
+                                </ul>
+                        {{/if}}
+                    </ul>
+                {{/if}}
                 <div class="nav-collapse collapse">
                     {{loginButtons}}
                 </div>

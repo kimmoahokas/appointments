@@ -2,7 +2,12 @@
     <head><title>Lab course appointment scheduler</title></head>
     {{yield 'navbar'}}
     <div class="container">
-        {{yield}}
+        {{#if currentUser}}
+            {{yield}}
+        {{else}}
+            <h1>Login required!</h1>
+            <p>Login through the menu in upper right corner to use this system</p>
+        {{/if}}
         <footer>
             <p>&copy; Kimmo Ahokas and Antti Tolonen 2013. In case of problems contact T-110.5102@list.aalto.fi</p>
         </footer>
