@@ -15,7 +15,7 @@ Template.manageUsersTemplate.isSelectedTab = function(tab) {
 
 Template.addUsersTab.events({
     'click #add-users-button': function(event) {
-        var text = $('textarea#multiple-users').val().replace(/\s/g, '');
+        var text = $('textarea#multiple-users').val();
         try {
              var array = $.parseJSON(text);
              // no errors, so assume that the object is good and send it to server
