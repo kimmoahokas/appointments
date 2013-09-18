@@ -30,6 +30,9 @@ Router.map(function() {
     this.route('my_appointments', {
         template: 'appointmentListTemplate',
     });
+    this.route('manage_users', {
+        template: 'manageUsersTemplate',
+    });
 });
 
 ReserveController = RouteController.extend({

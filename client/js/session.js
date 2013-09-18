@@ -15,3 +15,6 @@ Session.setDefault('selectedAppointment', null);
 
 // The tab that is currently active in manage view
 Session.set('selectedTab', 'manageAppointments');
+
+//The tab that is currently active in user management view
+Session.set('userManagementSelectedTab', 'addUsers');

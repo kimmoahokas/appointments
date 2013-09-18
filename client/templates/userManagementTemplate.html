@@ -1,0 +1,64 @@
+<template name="manageUsersTemplate">
+    {{#if currentUser.profile.admin}}
+        <ul class="nav nav-tabs">
+            <li id="add-users-tab" {{#if isSelectedTab "addUsers"}}class="active"{{/if}}><a>Add users</a></li>
+            <li id="manage-users-tab" {{#if isSelectedTab "manageUsers"}}class="active"{{/if}}><a>Manage users</a></li>
+        </ul>
+
+        {{#if isSelectedTab "addUsers"}}
+            {{> addUsersTab}}
+        {{/if}}
+
+        {{#if isSelectedTab "manageUsers"}}
+            {{> manageUsersTab}}
+        {{/if}}
+
+    {{else}}
+        <h1>Permission denied!<h1>
+    {{/if}}
+</template>
+
+<template name="addUsersTab">
+    <form>
+        <fieldset>
+            <legend>Add multiple users at once</legend>
+            <label for="multiple-users">JSON array of user objects</label>
+            <textarea id="multiple-users" name="multiple-users" />
+            <p><button type="button" id="add-users-button">Add users</button></p>
+        </fieldset>
+    <form>
+    <p>Input users in format (JSON):</p>
+    <pre>
+[
+    {
+        "username": "David Tester",
+        "password": "reallySecretPassword",
+        "email": "david@example.com",
+        "profile": {
+            "admin": true,
+            "studentnum": "123456",
+            "ip": "192.168.0.0"
+        }
+    },
+    {
+        "username": "Tina Tester",
+        "password": "reallySecretPassword",
+        "email": "tina@example.com",
+        "profile": {
+            "admin": false,
+            "studentnum": "54321",
+            "greeting": "Hello"
+        }
+    }
+]
+    </pre>
+    <p>The profile object can contain any data you want to add, but you can leave it out as well. Required fields are username, password and email. The indentation is not important.</p>
+
+</template>
+
+
+
+
+<template name="manageUsersTab">
+    <p>Coming later...</p>
+</template>

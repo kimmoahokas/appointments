@@ -31,7 +31,7 @@ Meteor.methods({
 "   End: " + moment(appointment.end).format('LLLL') + "\n" +
 "   Location: Computer Science building room A120 (Playroom)\n" +
 "   Student: " + student.username + "\n" +
-"You can cancell this appointment until " + moment(appointment.editEnds).format('LLLL') + "\n" +
+"You can cancel this appointment until " + moment(appointment.editEnds).format('LLLL') + "\n" +
 "To cancel go to " + Router.url('my_appointments') + '\n' +
 "Remember to be on time!\n" +
 "If you can't come to appointment, contact course email immediately!\n\n" +
@@ -96,6 +96,31 @@ Meteor.methods({
             }
             return true;
         }
+    },
+    'addMultipleUsers': function(userarray) {
+        //validate the array
+        check(userarray, Array);
+        userarray.forEach(function(entry) {
+            check(entry, {
+                username: String,
+                password: String,
+                email: String,
+                profile: Match.Optional(Object)
+            });
+            // for simplicity add profile:{admin: false} to every object
+            if (!entry.profile) {
+                eentry.profile = {};
+            }
+            if (!entry.profile.admin) {
+                entry.profile.admin = false;
+            }
+        });
+        userarray.forEach(function(user) {
+            var result = Meteor.users.findOne({username: user.username});
+            if (!result) {
+                Accounts.createUser(user);
+            }
+        });
     }
 });
 
