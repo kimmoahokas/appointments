@@ -16,4 +16,7 @@ This is the new appointment scheduler for T-110 courses.
 
 Allways use meteorite (`mrt`) to add/remove packages. Otherwise the system will break!
 
+Licensed under the MIT License (MIT). see file license.md for further details.
+
+
 [nodejs]: http://nodejs.org
