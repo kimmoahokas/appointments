@@ -11,13 +11,13 @@ Handlebars.registerHelper('getUserName', function(userId) {
 });
 
 Handlebars.registerHelper('formatDate', function(date) {
-    return moment(date).format(Session.get('dateFormat'));
+    return moment(date).format(Settings.dateFormat);
 });
 
 Handlebars.registerHelper('formatTime', function(date) {
-    return moment(date).format(Session.get('timeFormat'));
+    return moment(date).format(Settings.timeFormat);
 });
 
 Handlebars.registerHelper('formatDateTime', function(date) {
-    return moment(date).format(Session.get('dateTimeFormat'));
+    return moment(date).format(Settings.dateTimeFormat);
 });

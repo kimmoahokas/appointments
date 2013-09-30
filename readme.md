@@ -18,5 +18,8 @@ Allways use meteorite (`mrt`) to add/remove packages. Otherwise the system will 
 
 Licensed under the MIT License (MIT). see file license.md for further details.
 
+## Deploying to production ##
+
+For instructions on how to deploy Tuija to production environment see file deployment.md
 
 [nodejs]: http://nodejs.org

@@ -27,11 +27,11 @@ Meteor.methods({
 "You have just reserved appointment on course\n" +
 "T-110.5102 Laboratory Works in Networking and Security\n" +
 "Details:\n" +
-"   Start: " + moment(appointment.start).format('LLLL') + "\n" +
-"   End: " + moment(appointment.end).format('LLLL') + "\n" +
+"   Date: " + moment(appointment.start).format(Settings.dateFormat) + "\n" +
+"   Time: " + moment(appointment.start).format(Settings.timeFormat) + ' - ' + moment(appointment.end).format(Settings.timeFormat) + "\n" +
 "   Location: Computer Science building room A120 (Playroom)\n" +
 "   Student: " + student.username + "\n" +
-"You can cancel this appointment until " + moment(appointment.editEnds).format('LLLL') + "\n" +
+"You can cancel this appointment until " + moment(appointment.editEnds).format(Settings.dateTimeFormat) + "\n" +
 "To cancel go to " + Router.url('my_appointments') + '\n' +
 "Remember to be on time!\n" +
 "If you can't come to appointment, contact course email immediately!\n\n" +
@@ -72,8 +72,8 @@ Meteor.methods({
 "You have just cancelled appointment on course\n" +
 "T-110.5102 Laboratory Works in Networking and Security\n" +
 "Details:\n" +
-"   Start: " + moment(appointment.start).format('LLLL') + "\n" +
-"   End: " + moment(appointment.end).format('LLLL') + "\n" +
+"   Date: " + moment(appointment.start).format(Settings.dateFormat) + "\n" +
+"   Time: " + moment(appointment.start).format(Settings.timeFormat) + ' - ' + moment(appointment.end).format(Settings.timeFormat) + "\n" +
 "   Location: Computer Science building room A120 (Playroom)\n" +
 "   Student: " + student.username + "\n\n" +
 "Best regards,\n" +
@@ -121,6 +121,11 @@ Meteor.methods({
                 Accounts.createUser(user);
             }
         });
+    },
+    'getServerDate': function() {
+        if(Meteor.isServer) {
+            return new Date();
+        }
     }
 });
 

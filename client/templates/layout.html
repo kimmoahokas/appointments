@@ -4,6 +4,13 @@
     <div class="container">
         {{#if currentUser}}
             {{yield}}
+            {{#with timeZoneInfo}}
+                <!-- show warning if user's timezone doesn't match server's timezone -->
+                <div class="alert">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Warning!</strong>The times are represented in your computer's local timezone (GMT {{local}}) but the appointments will be held using timezone GMT {{remote}}. Please set your computer clock to correct time and timezone to ensure that you reserve correct appointment slot!
+                </div>
+            {{/with}}
         {{else}}
             <h1>Login required!</h1>
             <p>Login through the menu in upper right corner to use this system</p>

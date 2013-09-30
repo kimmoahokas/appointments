@@ -75,15 +75,6 @@ Template.reserveTemplate.selectedAppointment = function() {
     return Appointments.findOne(Session.get('selectedAppointment'));
 };
 
-Template.reserveTemplate.getUserName = function(userId) {
-    var user = Meteor.users.findOne(userId);
-    return user ? user.username : 'Not available';
-};
-
-Template.reserveTemplate.formatDate = function(date) {
-    return moment(date).format('llll');
-};
-
 Template.reserveTemplate.canReserve = function(editEnds) {
     return new Date() < editEnds && this.student === null;
 };

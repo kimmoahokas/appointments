@@ -14,20 +14,6 @@ Template.appointmentListTemplate.appointments = function() {
     return appointments;
 };
 
-Template.appointmentListTemplate.canCancel = function(editEnds) {
-    //this = appointment, only students can cancel appointments
-    return new Date() < editEnds && Meteor.userId() === this.assistant;
-};
-
-Template.appointmentListTemplate.getUserName = function(userId) {
-    var user = Meteor.users.findOne(userId);
-    return user ? user.username : 'Not available';
-};
-
-Template.appointmentListTemplate.formatDate = function(date) {
-    return moment(date).format('llll');
-};
-
 Template.appointmentListTemplate.events({
     'click .appointment-cancel-button': function(event) {
         var result = confirm('Cancel this appointment?');

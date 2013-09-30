@@ -131,8 +131,6 @@ Template.manageAppointmentsTemplate.events({
             }
         } else {
             Session.set('editRoundId', value);
-            //update DOM so we can modify selection
-            //Deps.flush();
         }
     },
     'click #update_round_button': function(event) {
@@ -153,25 +151,18 @@ Template.manageAppointmentsTemplate.events({
              var result = Meteor.call('deleteRoundAppointments', Session.get('editRoundId'));
              console.log(result);
              Session.set('editRoundId', null);
-             //update DOM so we can modify selection
-            //Deps.flush();
-
         }
         return false;
     }
 });
 
-//H elpers sahred with all three templates
+// Helpers sahred with all three templates
 // Helpers defined this way, because three templates share couple of helpers
 var helpers = {
     rounds: function() {
         return Rounds.find();
     },
 
-    getUserName: function(userId) {
-        var user = Meteor.users.findOne(userId);
-        return user ? user.username : 'Not available';
-    },
     toDate: function(date) {
         return moment(date).format('YYYY-MM-DD[T]HH:mm');
     }
@@ -179,7 +170,7 @@ var helpers = {
 
 // helper to select correct tab in "main" template
 Template.manageAppointmentsTemplate.isSelectedTab = function(tab) {
-    return tab === Session.get('selectedTab');
+    return Session.equals('selectedTab', tab);
 };
 
 //helpers for appoint management template
@@ -195,7 +186,7 @@ Template.manageRoundTab.currentRound = function() {
     return Rounds.findOne(Session.get('editRoundId'));
 };
 Template.manageRoundTab.selected = function(id) {
-    if(id === Session.get('editRoundId')) {
+    if(Session.equals('editRoundId', id)) {
         return 'selected="selected"';
     }
 };

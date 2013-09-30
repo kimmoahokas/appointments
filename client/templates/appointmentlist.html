@@ -4,8 +4,8 @@
         <thead>
             <tr>
                 <td>Title</td>
-                <td>Start time</td>
-                <td>End time</td>
+                <td>Date</td>
+                <td>Time</td>
                 <td>Assistant</td>
                 <td>Student</td>
                 <td>Cancellation dl</td>
@@ -16,12 +16,12 @@
                 <tr>
                     <td>{{title}}</td>
                     <td>{{formatDate start}}</td>
-                    <td>{{formatDate end}}</td>
+                    <td>{{formatTime start}} - {{formatTime end}}</td>
                     <td>{{getUserName assistant}}</td>
                     <td>{{getUserName student}}</td>
-                    <td>{{formatDate editEnds}}</td>
+                    <td>{{formatDateTime editEnds}}</td>
                     <td>
-                        {{#if canCancel editEnds}}
+                        {{#if canEdit editEnds}}
                             <button class="appointment-cancel-button" type="button" value="{{_id}}">Cancel</button>
                         {{/if}}
                     </td>
