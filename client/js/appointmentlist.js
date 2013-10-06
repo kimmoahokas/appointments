@@ -1,6 +1,5 @@
 Template.appointmentListTemplate.appointments = function() {
     var filter = Session.get('appointmentFilter');
-    console.log(filter);
     var appointments = Appointments.find(filter, {
         sort: {start : 1}
     });

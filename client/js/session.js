@@ -20,7 +20,8 @@ Session.setDefault('selectedTab', 'manageAppointments');
 Session.setDefault('userManagementSelectedTab', 'addUsers');
 
 // set the default filter for appointments to show to user
-Meteor.startup(function() {
+// need to run this automatically when user is logged in
+Deps.autorun(function() {
     var filter = {
         end: {$gte: new Date()},
     };
@@ -31,7 +32,7 @@ Meteor.startup(function() {
         filter.assistant = Meteor.userId();
         filter.student = {$ne: null};
     }
-    Session.setDefault('appointmentFilter', filter);
+    Session.set('appointmentFilter', filter);
 });
 
 Meteor.startup(function() {
