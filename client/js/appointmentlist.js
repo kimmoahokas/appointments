@@ -1,14 +1,7 @@
-Meteor.subscribe('my-appointments');
-
-//TODO: add some control to only show old/future/etc appointments
-
 Template.appointmentListTemplate.appointments = function() {
-    var appointments = Appointments.find({
-        $or: [
-            {assistant: Meteor.userId(), student: {$ne: null}},
-            {student: Meteor.userId()}
-        ]
-    }, {
+    var filter = Session.get('appointmentFilter');
+    console.log(filter);
+    var appointments = Appointments.find(filter, {
         sort: {start : 1}
     });
     return appointments;

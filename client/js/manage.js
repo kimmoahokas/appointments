@@ -1,6 +1,3 @@
-var appointmentHandle = Meteor.subscribe('all-appointments');
-var roundHandle = Meteor.subscribe('all-rounds');
-var userHandle = Meteor.subscribe('all-users');
 var manageCalendar;
 
 var initManageCalendar = function() {
@@ -14,11 +11,18 @@ var initManageCalendar = function() {
         selectable: true,
         editable: true,
         events: function(start, end, callback) {
-            var events = Appointments.find({$and: [
-                {start: {$gte: start}},
-                {end: {$lte: end}}
-            ]}).fetch();
-            //TODO: color reserved appointments?
+            var filter = Session.get('appointmentFilter');
+            if (filter.start) {
+                if (start > filter.start) {
+                    filter.start = start;
+                }
+            }
+            if (filter.end) {
+                if (end < filter.end) {
+                    filter.end = end;
+                }
+            }
+            var events = Appointments.find(filter).fetch();
             callback(events);
         },
         select: function(startDate, endDate) {
@@ -193,8 +197,7 @@ Template.manageRoundTab.selected = function(id) {
 
 // Refresh calendar widget on data change
 Deps.autorun(function() {
-        var count = Appointments.find().count();
-        // log the count so that meteor detects data dependency
-        console.log('appointment change dep fired, appointment count:', count);
-        $('#manageCalendar').fullCalendar('refetchEvents');
+    var filter = Session.get('appointmentFilter');
+    var count = Appointments.find().count();
+    $('#manageCalendar').fullCalendar('refetchEvents');
 });

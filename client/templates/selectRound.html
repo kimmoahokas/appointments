@@ -1,13 +1,25 @@
 <template name="selectRound">
-    <form>
-        <fieldset>
-            <legend>Select round</legend>
-            <select id='round-select'>
-                <option value="">Select round...</option>
-                {{#each rounds}}
-                    <option value="{{_id}}">{{name}}</option>
-                {{/each}}
-            </select>
-        </fieldset>
-    </form>
+    <div class="row">
+        <div class="span12">
+            <h1>Select Round</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Round name</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each rounds}}
+                        <tr>
+                            <td><a href="{{urlFor 'reserve'}}">{{name}}</a></td>
+                        </tr>
+                    {{else}}
+                        <tr>
+                            <td>No appointment rounds available for reservation, check again later.</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </template>

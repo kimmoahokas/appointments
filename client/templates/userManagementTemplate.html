@@ -24,7 +24,9 @@
             <legend>Add multiple users at once</legend>
             <label for="multiple-users">JSON array of user objects</label>
             <textarea id="multiple-users" name="multiple-users" />
-            <p><button type="button" id="add-users-button">Add users</button></p>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="button" id="add-users-button">Add users</button>
+            </div>
         </fieldset>
     <form>
     <p>Input users in format (JSON):</p>
@@ -50,8 +52,7 @@
             "greeting": "Hello"
         }
     }
-]
-    </pre>
+]</pre>
     <p>The profile object can contain any data you want to add, but you can leave it out as well. Required fields are username, password and email. The indentation is not important.</p>
 
 </template>

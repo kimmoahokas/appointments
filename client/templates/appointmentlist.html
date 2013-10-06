@@ -1,32 +1,37 @@
 <template name="appointmentListTemplate">
     <h1>List of your appointments</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <td>Title</td>
-                <td>Date</td>
-                <td>Time</td>
-                <td>Assistant</td>
-                <td>Student</td>
-                <td>Cancellation dl</td>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each appointments}}
-                <tr>
-                    <td>{{title}}</td>
-                    <td>{{formatDate start}}</td>
-                    <td>{{formatTime start}} - {{formatTime end}}</td>
-                    <td>{{getUserName assistant}}</td>
-                    <td>{{getUserName student}}</td>
-                    <td>{{formatDateTime editEnds}}</td>
-                    <td>
-                        {{#if canEdit editEnds}}
-                            <button class="appointment-cancel-button" type="button" value="{{_id}}">Cancel</button>
-                        {{/if}}
-                    </td>
-                </tr>
-            {{/each}}
-        </tbody>
-    </table>
+    {{> filterTemplate}}
+    <div class="row">
+        <div class="span12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Title</td>
+                        <td>Date</td>
+                        <td>Time</td>
+                        <td>Assistant</td>
+                        <td>Student</td>
+                        <td>Cancellation dl</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each appointments}}
+                        <tr>
+                            <td>{{title}}</td>
+                            <td>{{formatDate start}}</td>
+                            <td>{{formatTime start}} - {{formatTime end}}</td>
+                            <td>{{getUserName assistant}}</td>
+                            <td>{{getUserName student}}</td>
+                            <td>{{formatDateTime editEnds}}</td>
+                            <td>
+                                {{#if canEdit editEnds}}
+                                    <button class="appointment-cancel-button" type="button" value="{{_id}}">Cancel</button>
+                                {{/if}}
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </template>

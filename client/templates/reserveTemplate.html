@@ -18,8 +18,10 @@
                     <dt>Time</dt>
                     <dd id="reserve-end">{{formatTime start}} - {{formatTime end}}</dd>
                 </dl>
-                <button id="reserve-appointment-button" type="button" value="{{_id}}" {{#unless canReserve editEnds}}disabled="disabled"{{/unless}}>Reserve appointment</button>
-                <button id="cancel-appointment-button" type="button" value="{{_id}}" {{#unless canCancel editEnds}}disabled="disabled"{{/unless}}>Cancel appointment</button>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="reserve-appointment-button" type="button" value="{{_id}}" {{#unless canReserve editEnds}}disabled="disabled"{{/unless}}>Reserve appointment</button>
+                    <button class="btn" id="cancel-appointment-button" type="button" value="{{_id}}" {{#unless canCancel editEnds}}disabled="disabled"{{/unless}}>Cancel appointment</button>
+                </div>
             {{else}}
                 <p>Click on apppointment to see it's details<p>
             {{/with}}

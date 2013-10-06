@@ -87,7 +87,5 @@ Template.reserveTemplate.canCancel = function(editEnds) {
 // Refresh calendar widget on data change
 Deps.autorun(function() {
         var count = Appointments.find().count();
-        // log the count so that meteor detects data dependency
-        console.log('appointment change dep fired, appointment count:', count);
         $('#reserveCalendar').fullCalendar('refetchEvents');
 });

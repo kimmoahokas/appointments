@@ -21,3 +21,8 @@ Handlebars.registerHelper('formatTime', function(date) {
 Handlebars.registerHelper('formatDateTime', function(date) {
     return moment(date).format(Settings.dateTimeFormat);
 });
+
+Handlebars.registerHelper('getRoundName', function(roundId) {
+    var round = Rounds.findOne(roundId);
+    return round.name;
+});
