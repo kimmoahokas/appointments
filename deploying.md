@@ -1,6 +1,6 @@
 # Deploying Tuija #
 
-These instructions are tested on Ubuntu 12.04.3 LTS, for other distributions you need modify some parts.
+These instructions are tested on Ubuntu 12.04.3 LTS, for other distributions you need to modify some parts.
 
 1. Add repositories (Tuija needs cutting edge software):
 
@@ -33,6 +33,7 @@ These instructions are tested on Ubuntu 12.04.3 LTS, for other distributions you
 
         server {
             # on linux this should listen for both IPv4 and IPv6
+            listen 80;
             listen [::]:80;
 
             # we don't actually allow any unencrypted traffic, so redirect
@@ -41,6 +42,7 @@ These instructions are tested on Ubuntu 12.04.3 LTS, for other distributions you
 
         server {
             # again listen for 443;
+            listen 443 ssl;
             listen [::]:443 ssl;
             server_name appointments.cs.hut.fi;
             ssl_certificate     /etc/nginx/ssl/server.crt;
@@ -55,6 +57,7 @@ These instructions are tested on Ubuntu 12.04.3 LTS, for other distributions you
 
 
     After adding those lines:
+
         sudo ln -s /etc/nginx/sites-available/tuija /etc/nginx/sites-enabled/tuija
         sudo rm /etc/nginx/sites-enabled/default
         sudo /etc/init.d/nginx start
@@ -88,7 +91,7 @@ These instructions are tested on Ubuntu 12.04.3 LTS, for other distributions you
 9. Run tuija with forever:
 
         export ROOT_URL="https://your.server.com"
-        export PORT=9000
+        export PORT=3000
         export MONGO_URL="localhost"
         export MAIL_URL="smtp://your.mail.server"
         forever start main.js
