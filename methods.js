@@ -109,7 +109,7 @@ Meteor.methods({
             });
             // for simplicity add profile:{admin: false} to every object
             if (!entry.profile) {
-                eentry.profile = {};
+                entry.profile = {};
             }
             if (!entry.profile.admin) {
                 entry.profile.admin = false;
