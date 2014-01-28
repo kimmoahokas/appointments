@@ -11,7 +11,10 @@ var users = [
         username: 'Kimmo Ahokas',
         email: 'kimmo.ahokas@aalto.fi',
         password: 'salakala',
-        admin: true,
+        admin: false,
+        courses: [
+            {code: 'CSE-C2400', assistant: true}
+        ],
         profile: {}
     },
     {
@@ -19,6 +22,9 @@ var users = [
         email: 'testaaja@example.com',
         password: 'hyvinsalainen',
         admin: false,
+        courses: [
+            {code: 'CSE-C2400', assistant: false}
+        ],
         profile: {}
     }
 ];

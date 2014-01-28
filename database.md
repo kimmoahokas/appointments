@@ -13,7 +13,7 @@ The database used by tuija follows following structure.
         admin: Boolean (optional, default false),
         courses: [
             {
-                id: Course id (String),
+                code: Course code (String),
                 assistant: Boolean (optional, default false),
             }
         ],

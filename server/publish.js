@@ -1,6 +1,17 @@
 Meteor.publish("userData", function () {
-  return Meteor.users.find({_id: this.userId},
-                           {fields: {'admin': 1, 'courses': 1}});
+    return Meteor.users.find(
+        {_id: this.userId},
+        {fields: {'admin': 1, 'courses': 1}});
+});
+
+Meteor.publish("courseUsers", function(courseCode) {
+    if (isCourseStaff(this.userId, courseCode)) {
+        return Meteor.users.find(
+            {'courses.code': courseCode},
+            {fields: {username: 1, emails: 1, profile: 1, 'admin': 1, 'courses': 1}}
+        );
+    }
+    return null;
 });
 
 
@@ -11,15 +22,14 @@ Meteor.publish('courses', function() {
             if (user.admin) {
                 return Courses.find();
             } else {
-                var courseIds = _.pluck(user.courses, 'id');
+                var courseCodes = _.pluck(user.courses, 'code');
                 return Courses.find({
-                    _id: {$in: courseIds}
+                    code: {$in: courseCodes}
                 });
             }
         }
     }
 });
-
 
 
 Meteor.publish('available-rounds', function(courseId) {
@@ -83,16 +93,6 @@ Meteor.publish('all-rounds', function() {
         var user = Meteor.users.findOne(this.userId);
         if (user.admin) {
             return Rounds.find();
-        }
-    }
-});
-
-
-Meteor.publish('all-users', function() {
-    if (this.userId) {
-        var user = Meteor.users.findOne(this.userId);
-        if (user.admin) {
-            return Meteor.users.find();
         }
     }
 });
