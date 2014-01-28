@@ -1,7 +1,32 @@
-Meteor.publish('available-rounds', function() {
+Meteor.publish("userData", function () {
+  return Meteor.users.find({_id: this.userId},
+                           {fields: {'admin': 1, 'courses': 1}});
+});
+
+
+Meteor.publish('courses', function() {
+    if (this.userId) {
+        var user = Meteor.users.findOne(this.userId);
+        if (user) {
+            if (user.admin) {
+                return Courses.find();
+            } else {
+                var courseIds = _.pluck(user.courses, 'id');
+                return Courses.find({
+                    _id: {$in: courseIds}
+                });
+            }
+        }
+    }
+});
+
+
+
+Meteor.publish('available-rounds', function(courseId) {
     if (this.userId) {
         var now = new Date();
         return Rounds.find({
+            course: courseId,
             opens: {$lte: now},
             closes: {$gte: now}
         });
@@ -47,7 +72,7 @@ Meteor.publish('my-appointments', function() {
 Meteor.publish('all-appointments', function() {
     if (this.userId) {
         var user = Meteor.users.findOne(this.userId);
-        if (user.profile.admin) {
+        if (user.admin) {
             return Appointments.find();
         }
     }
@@ -56,7 +81,7 @@ Meteor.publish('all-appointments', function() {
 Meteor.publish('all-rounds', function() {
     if (this.userId) {
         var user = Meteor.users.findOne(this.userId);
-        if (user.profile.admin) {
+        if (user.admin) {
             return Rounds.find();
         }
     }
@@ -66,7 +91,7 @@ Meteor.publish('all-rounds', function() {
 Meteor.publish('all-users', function() {
     if (this.userId) {
         var user = Meteor.users.findOne(this.userId);
-        if (user.profile.admin) {
+        if (user.admin) {
             return Meteor.users.find();
         }
     }

@@ -9,7 +9,7 @@ Template.filterTemplate.rounds = function() {
 
 Template.filterTemplate.assistants = function() {
     return Meteor.users.find({
-        'profile.admin': true
+        'admin': true
     });
 };
 

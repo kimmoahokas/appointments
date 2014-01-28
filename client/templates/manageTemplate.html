@@ -1,5 +1,5 @@
 <template name="manageAppointmentsTemplate">
-    {{#if currentUser.profile.admin}}
+    {{#if currentUser.admin}}
         {{> filterTemplate}}
         <div class="row">
             <div class="span8">
@@ -83,7 +83,7 @@
                 </div>
             </form>
         {{else}}
-            <p>click on appointment to edit it</p>
+            <p>Click on appointment to edit it</p>
         {{/with}}
     </div>
 </template>

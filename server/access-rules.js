@@ -3,7 +3,7 @@ Appointments.allow({
         //only admins can add appointments
         if (userId) {
             var user = Meteor.users.findOne(userId);
-            return user.profile.admin;
+            return user.admin;
         }
         return false;
     },
@@ -11,14 +11,14 @@ Appointments.allow({
         //TODO: allow reserving the appointment
         if (userId) {
             var user = Meteor.users.findOne(userId);
-            return user.profile.admin;
+            return user.admin;
         }
         return false;
     },
     remove: function (userId, doc) {
         if (userId) {
             var user = Meteor.users.findOne(userId);
-            return user.profile.admin;
+            return user.admin;
         }
         return false;
     }
@@ -29,7 +29,7 @@ Rounds.allow({
         //only admins can add appointments
         if (userId) {
             var user = Meteor.users.findOne(userId);
-            return user.profile.admin;
+            return user.admin;
         }
         return false;
     },
@@ -37,7 +37,7 @@ Rounds.allow({
         //TODO: allow reserving the appointment
         if (userId) {
             var user = Meteor.users.findOne(userId);
-            return user.profile.admin;
+            return user.admin;
         }
         return false;
     },
@@ -45,7 +45,7 @@ Rounds.allow({
         // can only remove your own documents
         if (userId) {
             var user = Meteor.users.findOne(userId);
-            return user.profile.admin;
+            return user.admin;
         }
         return false;
     }

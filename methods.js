@@ -16,33 +16,10 @@ Meteor.methods({
         }
         var student = Meteor.users.findOne(this.userId);
         var assistant = Meteor.users.findOne(appointment.assistant);
+
         if(Meteor.isServer && student && assistant) {
             Appointments.update(appointmentId, {$set: {student: this.userId}});
-            var mail = {
-                from: 'T-110.5102@list.aalto.fi',
-                to: contactEmail(student),
-                replyTo: 'T-110.5102@list.aalto.fi',
-                subject: 'T-110.5102 Appointment',
-                text:
-"You have just reserved appointment on course\n" +
-"T-110.5102 Laboratory Works in Networking and Security\n" +
-"Details:\n" +
-"   Date: " + moment(appointment.start).format(Settings.dateFormat) + "\n" +
-"   Time: " + moment(appointment.start).format(Settings.timeFormat) + ' - ' + moment(appointment.end).format(Settings.timeFormat) + "\n" +
-"   Location: Computer Science building room A120 (Playroom)\n" +
-"   Student: " + student.username + "\n" +
-"You can cancel this appointment until " + moment(appointment.editEnds).format(Settings.dateTimeFormat) + "\n" +
-"To cancel go to " + Router.url('my_appointments') + '\n' +
-"Remember to be on time!\n" +
-"If you can't come to appointment, contact course email immediately!\n\n" +
-"Best regards,\n" +
-"T-110.5102 Staff\n"
-            };
-
-            // Send two separate emails so that students don't see assistant name
-            Email.send(mail);
-            mail.to = contactEmail(assistant);
-            Email.send(mail);
+            sendReservationEmails(this.userId, appointmentId);
             return true;
         }
     },
@@ -60,30 +37,8 @@ Meteor.methods({
             throw new Meteor.Error(403, 'You have not reserved this appointment!');
         }
         if(Meteor.isServer) {
-            var student = Meteor.users.findOne(this.userId);
-            var assistant = Meteor.users.findOne(appointment.assistant);
             Appointments.update(appointmentId, {$set: {student: null}});
-            var mail = {
-                from: 'T-110.5102@list.aalto.fi',
-                to: contactEmail(student),
-                replyTo: 'T-110.5102@list.aalto.fi',
-                subject: 'T-110.5102 Appointment cancelled',
-                text:
-"You have just cancelled appointment on course\n" +
-"T-110.5102 Laboratory Works in Networking and Security\n" +
-"Details:\n" +
-"   Date: " + moment(appointment.start).format(Settings.dateFormat) + "\n" +
-"   Time: " + moment(appointment.start).format(Settings.timeFormat) + ' - ' + moment(appointment.end).format(Settings.timeFormat) + "\n" +
-"   Location: Computer Science building room A120 (Playroom)\n" +
-"   Student: " + student.username + "\n\n" +
-"Best regards,\n" +
-"T-110.5102 Staff\n"
-            };
-
-            // Send two separate emails so that students don't see assistant name
-            Email.send(mail);
-            mail.to = contactEmail(assistant);
-            Email.send(mail);
+            sendCancellationEmails(this.userId, appointmentId);
             return true;
         }
     },
@@ -91,7 +46,7 @@ Meteor.methods({
         check(roundId, String);
         if (this.userId && Meteor.isServer) {
             user = Meteor.users.findOne(this.userId);
-            if (user.profile.admin) {
+            if (user.admin) {
                 Appointments.remove({round: roundId});
             }
             return true;
@@ -111,8 +66,8 @@ Meteor.methods({
             if (!entry.profile) {
                 eentry.profile = {};
             }
-            if (!entry.profile.admin) {
-                entry.profile.admin = false;
+            if (!entry.admin) {
+                entry.admin = false;
             }
         });
         userarray.forEach(function(user) {
@@ -128,10 +83,3 @@ Meteor.methods({
         }
     }
 });
-
-var contactEmail = function (user) {
-    if (user.emails && user.emails.length) {
-        return user.emails[0].address;
-    }
-    return null;
-};

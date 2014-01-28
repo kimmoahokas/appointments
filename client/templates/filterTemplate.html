@@ -3,7 +3,7 @@
         <div class="span12">
             <div class="btn-toolbar">
                 <button class="btn {{#unless filter.end}}active{{/unless}}" type="button" id="show-old">Show old</button>
-                {{#if currentUser.profile.admin}}
+                {{#if currentUser.admin}}
                     <div class="btn-group">
                         <button class="btn {{#if showAllActive}}active{{/if}}" type="button" id="show-all">Show all</button>
                         <button class="btn {{#if showUnreservedActive}}active{{/if}}" type="button" id="show-unreserved">Show unreserved</button>
@@ -22,7 +22,7 @@
                         {{/each}}
                     </ul>
                 </div>
-                {{#if currentUser.profile.admin}}
+                {{#if currentUser.admin}}
                     <div class="btn-group">
                         <a class="btn dropdown-toggle {{#if filter.assistant}}active{{/if}}" data-toggle="dropdown" href="#">
                             Show assistant {{#if filter.assistant}}({{getUserName filter.assistant}}){{else}}(All){{/if}}

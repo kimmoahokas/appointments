@@ -30,7 +30,7 @@ var initManageCalendar = function() {
                 alert('Please select round before creating slots');
                 return;
             }
-            if(!Meteor.user() || !Meteor.user().profile.admin) {
+            if(!Meteor.user() || !Meteor.user().admin) {
                 //only admins can create appointments
                 return;
             }

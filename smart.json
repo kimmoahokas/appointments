@@ -4,6 +4,7 @@
     "fullcalendar": {},
     "iron-router": {},
     "accounts-ui-bootstrap-dropdown": {},
-    "momentjs": {}
+    "momentjs": {},
+    "handlebars-server": {}
   }
 }

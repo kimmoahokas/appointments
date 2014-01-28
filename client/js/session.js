@@ -26,9 +26,9 @@ Deps.autorun(function() {
         end: {$gte: new Date()},
     };
     // different defaults for students and assistants
-    if (Meteor.user() && !Meteor.user().profile.admin) {
+    if (Meteor.user() && !Meteor.user().admin) {
         filter.student = Meteor.userId();
-    } else if (Meteor.user() && Meteor.user().profile.admin) {
+    } else if (Meteor.user() && Meteor.user().admin) {
         filter.assistant = Meteor.userId();
         filter.student = {$ne: null};
     }

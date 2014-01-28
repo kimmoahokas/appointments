@@ -1,22 +1,68 @@
-Meteor.startup(function() {
-    // create admin users
-    if (Meteor.users.find({username: "admin"}).count() === 0) {
-        Accounts.createUser({
-            username: "admin",
-            email: "admin@example.com",
-            password: "reallysecret",
-            profile: { admin: true }
-        });
+//Initial users of the system
+var users = [
+    {
+        username: "admin",
+        email: "admin@example.com",
+        password: "reallysecret",
+        admin: true,
+        profile: {}
+    },
+    {
+        username: 'Kimmo Ahokas',
+        email: 'kimmo.ahokas@aalto.fi',
+        password: 'salakala',
+        admin: true,
+        profile: {}
+    },
+    {
+        username: 'Toivo Testaaja',
+        email: 'testaaja@example.com',
+        password: 'hyvinsalainen',
+        admin: false,
+        profile: {}
     }
+];
 
-    var users = [
-        {username: 'Kimmo Ahokas', email: 'kimmo.ahokas@aalto.fi', password: 'salakala', profile: {admin: true}},
-        {username: 'Toivo Testaaja', email: 'testaaja@example.com', password: 'hyvinsalainen', profile: {admin: false}},
-    ];
+// Initial courses
+var courses = [
+    {
+        name: 'CSE-C2400 Tietokoneverkot',
+        code: 'CSE-C2400',
+        email: 'cse-c2400@aalto.fi',
+        roundDefaultStart: {
+            day: 3,     //wednesday this week
+            hour: 18,
+            minute: 0
+        },
+        roundDefaultEnd: {
+            day: 12,    //friday next week
+            hour: 18,
+            minute: 0
+        },
+        roundDefaultMaxReservations: 1,
+        defaultLocation: "Playroom (A106)"
+    }
+];
+
+var addUsers = function() {
     users.forEach(function(user) {
         var result = Meteor.users.findOne({username: user.username});
         if (!result) {
             Accounts.createUser(user);
         }
     });
+};
+
+var addCourses = function() {
+    courses.forEach(function(course) {
+        var result = Courses.findOne({name: course.name});
+        if (!result) {
+            Courses.insert(course);
+        }
+    });
+};
+
+Meteor.startup(function() {
+    addUsers();
+    addCourses();
 });

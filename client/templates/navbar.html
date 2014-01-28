@@ -1,4 +1,4 @@
-<template name="navbarTemplate">
+<template name="navbar">
     <div class="navbar navbar-inverse">
         <div class="navbar-inner">
             <div class="container">
@@ -10,12 +10,22 @@
                     <span class="icon-bar"></span>
                 </a>
 
-                <a class="brand" href="{{urlFor 'home'}}">Tuija Appointment scheduler</a>
+                <a class="brand" href="{{urlFor 'selectCourse'}}">Tuija Appointment scheduler</a>
                 {{#if currentUser}}
                     <ul class="nav">
-                        <li><a href="{{urlFor 'home'}}">Reserve appointment</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                {{selectedCourse}}<b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                {{#for course in myCourses}}
+                                    <li><a href="{{urlFor 'course' course.code}}"></a></li>
+                                {{/for}}
+                            </ul>
+                        </li>
+                        <li><a href="{{urlFor 'selectCourse'}}">Reserve appointment</a></li>
                         <li><a href="{{urlFor 'my_appointments'}}">My appointments</a></li>
-                        {{#if currentUser.profile.admin}}
+                        {{#if currentUser.admin}}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     Admin<b class="caret"></b>

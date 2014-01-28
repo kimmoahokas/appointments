@@ -1,0 +1,25 @@
+<template name="selectCourse">
+    <div class="row">
+        <div class="span12">
+            <h1>Select Course</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Course name</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each courses}}
+                        <tr>
+                            <td><a href="{{urlFor 'selectRound'}}">{{name}}</a></td>
+                        </tr>
+                    {{else}}
+                        <tr>
+                            <td>No appointment rounds available for reservation, check again later.</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>

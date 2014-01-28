@@ -1,16 +1,25 @@
 Router.configure({
-    layout: 'layout',
-    //notFoundTemplate: 'notFound',
+    //render the router manually to index template. this should be a little
+    // faster as the router does not need to render navbar.
+    autoRender: false,
+    notFoundTemplate: 'notFound',
     //loadingTemplate: 'loading'
-    renderTemplates: {
-        'navbarTemplate': {to: 'navbar'}
-    }
 });
 
 Router.map(function() {
-    this.route('home', {
+    this.route('selectCourse', {
         path: '/',
+        template: 'selectCourse',
+        data: function() {
+            return {courses: Courses.find()};
+        }
+    });
+    this.route('selectRound', {
+        path: '/:code/rounds',
         template: 'selectRound',
+        before: function() {
+            Session.set('courseCode', this.params.code);
+        },
         data: function() {
             var now = new Date();
             var rounds = Rounds.find({
@@ -21,8 +30,12 @@ Router.map(function() {
         }
     });
     this.route('reserve', {
-        path: '/round/:_id',
-        controller: 'ReserveController',
+        path: '/:code/rounds/:slug',
+        template: 'reserveTemplate',
+        before: function() {
+            Session.set('courseCode', this.params.code);
+            Session.set('roundSlug', this.params.slug);
+        }
     });
     this.route('manage', {
         template:'manageAppointmentsTemplate',
@@ -34,14 +47,3 @@ Router.map(function() {
         template: 'manageUsersTemplate',
     });
 });
-
-ReserveController = RouteController.extend({
-    template:'reserveTemplate',
-
-    run: function() {
-        Session.set('selectedRound', this.params._id);
-        this.render({'navbarTemplate': {to: 'navbar'}});
-        this.render('reserveTemplate');
-    }
-});
-
