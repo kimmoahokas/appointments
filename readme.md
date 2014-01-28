@@ -1,6 +1,8 @@
 # Tuija Appointment scheduler
 
-This is the new appointment scheduler for T-110 courses.
+This is the new appointment scheduler for T-110 courses. It currently works for one course and can only be customized in the code. No support for aalto login yet, so paaswords must be generated and distributed somehow.
+
+The system is built using [Meteor][meteor].
 
 ## Getting started ##
 
@@ -22,4 +24,5 @@ Licensed under the MIT License (MIT). see file license.md for further details.
 
 For instructions on how to deploy Tuija to production environment see file deployment.md
 
+[meteor]: http://www.meteor.com
 [nodejs]: http://nodejs.org
