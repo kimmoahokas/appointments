@@ -13,7 +13,8 @@ var users = [
         password: 'salakala',
         admin: false,
         courses: [
-            {code: 'CSE-C2400', assistant: true}
+            {code: 'CSE-C2400', assistant: true},
+            {code: 'T-110.4100', assistant: true}
         ],
         profile: {}
     },
@@ -35,6 +36,23 @@ var courses = [
         name: 'CSE-C2400 Tietokoneverkot',
         code: 'CSE-C2400',
         email: 'cse-c2400@aalto.fi',
+        roundDefaultStart: {
+            day: 3,     //wednesday this week
+            hour: 18,
+            minute: 0
+        },
+        roundDefaultEnd: {
+            day: 12,    //friday next week
+            hour: 18,
+            minute: 0
+        },
+        roundDefaultMaxReservations: 1,
+        defaultLocation: "Playroom (A106)"
+    },
+    {
+        name: 'T-110.4100 Tietokoneverkot',
+        code: 'T-110.4100',
+        email: 't-110.4100@tkk.fi',
         roundDefaultStart: {
             day: 3,     //wednesday this week
             hour: 18,

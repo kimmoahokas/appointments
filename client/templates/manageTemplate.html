@@ -1,5 +1,5 @@
 <template name="manageAppointmentsTemplate">
-    {{#if currentUser.admin}}
+    {{#if isCourseStaff currentUser._id selectedCourse.code}}
         {{> filterTemplate}}
         <div class="row">
             <div class="span8">

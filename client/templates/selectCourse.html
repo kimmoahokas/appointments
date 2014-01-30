@@ -11,11 +11,11 @@
                 <tbody>
                     {{#each courses}}
                         <tr>
-                            <td><a href="{{urlFor 'selectRound'}}">{{name}}</a></td>
+                            <td><a href="{{urlFor 'course'}}">{{name}}</a></td>
                         </tr>
                     {{else}}
                         <tr>
-                            <td>No appointment rounds available for reservation, check again later.</td>
+                            <td>You are not currently rolled to any course. If you think this is an error, please contact the course staff in question.</td>
                         </tr>
                     {{/each}}
                 </tbody>

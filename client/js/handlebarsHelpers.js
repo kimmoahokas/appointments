@@ -26,3 +26,19 @@ Handlebars.registerHelper('getRoundName', function(roundId) {
     var round = Rounds.findOne(roundId);
     return round.name;
 });
+
+Handlebars.registerHelper('selectedCourse', function() {
+    var courseCode = Session.get('courseCode');
+    if (courseCode) {
+        return Courses.findOne({code: courseCode});
+    }
+});
+
+Handlebars.registerHelper('myCourses', function() {
+    // it is enough to just return all courses, as subscriptions handle
+    // permissions.
+    return Courses.find();
+});
+
+// from lib/helpers.js
+Handlebars.registerHelper('isCourseStaff', isCourseStaff);

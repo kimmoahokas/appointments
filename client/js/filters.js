@@ -9,7 +9,8 @@ Template.filterTemplate.rounds = function() {
 
 Template.filterTemplate.assistants = function() {
     return Meteor.users.find({
-        'admin': true
+        'courses.code': Session.get('courseCode'),
+        'courses.assistant': true
     });
 };
 
@@ -64,7 +65,7 @@ Template.filterTemplate.events({
     },
     'click ul#assistant-select li': function(event) {
         var filter = Session.get('appointmentFilter');
-                var id = event.target.dataset.value;
+        var id = event.target.dataset.value;
         if (id === '') {
             delete filter.assistant;
         } else {

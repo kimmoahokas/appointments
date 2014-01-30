@@ -10,22 +10,30 @@
                     <span class="icon-bar"></span>
                 </a>
 
-                <a class="brand" href="{{urlFor 'selectCourse'}}">Tuija Appointment scheduler</a>
+                <a class="brand" href="{{urlFor 'home'}}">Tuija Appointment scheduler</a>
                 {{#if currentUser}}
                     <ul class="nav">
                         <li class="dropdown">
+
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                {{selectedCourse}}<b class="caret"></b>
+                                {{#if selectedCourse}}
+                                    {{selectedCourse.name}}
+                                {{else}}
+                                    Select course
+                                {{/if}}
+                                <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                {{#for course in myCourses}}
-                                    <li><a href="{{urlFor 'course' course.code}}"></a></li>
-                                {{/for}}
+                                {{#each myCourses}}
+                                    <li><a href="{{urlFor 'course'}}">{{name}}</a></li>
+                                {{/each}}
                             </ul>
                         </li>
-                        <li><a href="{{urlFor 'selectCourse'}}">Reserve appointment</a></li>
+                        {{#with selectedCourse}}
+                            <li><a href="{{urlFor 'course'}}">Reserve appointment</a></li>
+                        {{/with}}
                         <li><a href="{{urlFor 'my_appointments'}}">My appointments</a></li>
-                        {{#if currentUser.admin}}
+                        {{#if isCourseStaff currentUser._id selectedCourse.code}}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     Admin<b class="caret"></b>

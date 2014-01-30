@@ -1,5 +1,5 @@
 <template name="manageUsersTemplate">
-    {{#if currentUser.admin}}
+    {{#if isCourseStaff currentUser._id selectedCourse.code}}
         <ul class="nav nav-tabs">
             <li id="add-users-tab" {{#if isSelectedTab "addUsers"}}class="active"{{/if}}><a>Add users</a></li>
             <li id="manage-users-tab" {{#if isSelectedTab "manageUsers"}}class="active"{{/if}}><a>Manage users</a></li>

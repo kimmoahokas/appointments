@@ -7,14 +7,17 @@ Router.configure({
 });
 
 Router.map(function() {
-    this.route('selectCourse', {
+    this.route('home', {
         path: '/',
         template: 'selectCourse',
+        before: function() {
+            Session.set('courseCode', null);
+        },
         data: function() {
             return {courses: Courses.find()};
         }
     });
-    this.route('selectRound', {
+    this.route('course', {
         path: '/:code/rounds',
         template: 'selectRound',
         before: function() {
