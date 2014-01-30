@@ -1,11 +1,11 @@
 <template name='reserveTemplate'>
     <div class="row">
-        <div class="span8">
+        <div class="col-md-8">
             {{#constant}}
                 <div id='reserveCalendar'></div>
             {{/constant}}
         </div>
-        <div class="span4">
+        <div class="col-md-4">
             <h3>Appointment details</h3>
             {{#with selectedAppointment}}
                 <dl class="dl-horizontal">

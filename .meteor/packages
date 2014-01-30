@@ -9,9 +9,10 @@ standard-app-packages
 jquery-ui
 fullcalendar
 accounts-password
-bootstrap
 iron-router
-accounts-ui-bootstrap-dropdown
 momentjs
 email
 handlebars-server
+bootstrap-3
+accounts-ui-bootstrap-3
+underscore

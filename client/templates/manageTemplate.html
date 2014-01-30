@@ -1,13 +1,15 @@
 <template name="manageAppointmentsTemplate">
     {{#if isCourseStaff currentUser._id selectedCourse.code}}
+
         {{> filterTemplate}}
-        <div class="row">
-            <div class="span8">
+
+        <div class="row top-buffer">
+            <div class="col-md-8">
                 {{#constant}}
                     <div id='manageCalendar'></div>
                 {{/constant}}
             </div>
-            <div class="span4">
+            <div class="col-md-4">
                 <ul class="nav nav-tabs">
                     <li {{#if isSelectedTab "manageAppointments"}}class="active"{{/if}} id="manage-appointments-tab"><a>Manage appointments</a></li>
                     <li {{#if isSelectedTab "manageRounds"}}class="active"{{/if}} id="manage-rounds-tab"><a>Manage rounds</a></li>
@@ -33,32 +35,31 @@
         <form id="appointment_defaults">
             <fieldset>
                 <legend>Appointment creation settings</legend>
-                <p>
+                <div class="form-group">
                     <label for="round">Appointment round</label>
-                    <select id="round">
+                    <select class="form-control" id="round">
                         <option value="">Select round...</option>
                         <option value="">-------</option>
                         {{#each rounds}}
                             <option value="{{_id}}">{{name}}</option>
                         {{/each}}
                     </select>
-                </p>
-                <p>
+                </div>
+                <div class="form-group">
                     <label for="duration">Appointment duration (in minutes)</label>
                     <input type="number" name="duration" id="duration_field" min="0" step="1" value="30" />
-                </p>
-                <p>
+                </div>
+                <div class="form-group">
                     <label for="space">Time between appointments (in minutes)</label>
                     <input type="number" name="space" id="space_field" min="0" step="1" value="0" />
-                </p>
+                </div>
             </fieldset>
         </form>
         {{#with editedAppointment}}
             <form id="appointment_edit">
                 <fieldset>
                     <legend>Selected appointment details</legend>
-                    <p>
-                        <!-- TODO: Add fields to show assistant and studet -->
+                    <div class="form-group">
                         <dl class="dl-horizontal">
                             <dt>Round</dt>
                             <dd id="round-title">{{title}}</dd>
@@ -67,15 +68,15 @@
                             <dt>Student</dt>
                             <dd id="student-name">{{getUserName student}}</dd>
                         </dl>
-                    </p>
-                    <p>
+                    </div>
+                    <div class="form-group">
                         <label for="selected_start">Start time</label>
                         <input type="datetime-local" name="selected_start" id="selected_start" value="{{toDate start}}" />
-                    </p>
-                    <p>
+                    </div>
+                    <div class="form-group">
                         <label for="selected_end">End time</label>
                         <input type="datetime-local" name="selected_end" id="selected_end" value="{{toDate end}}" />
-                    </p>
+                    </div>
                 </fieldset>
                 <div class="form-actions">
                     <button class="btn btn-primary" id="update_appointment_button" type="button" value="{{_id}}">Update appointment</button>
@@ -95,7 +96,7 @@
             <fieldset>
                 <p>
                     <label for="edit-round-select">Round</label>
-                    <select name="edit-round-select" id="edit-round-select">
+                    <select class="form-control" name="edit-round-select" id="edit-round-select">
                         <option value="">Select round...</option>
                         <option value="add">Add new round</option>
                         <option value="">-------</option>
@@ -107,18 +108,18 @@
             </fieldset>
             {{#with currentRound}}
                 <fieldset>
-                    <p>
+                    <div class="form-actions">
                         <label for="round-open">Round reservation opens</label>
                         <input type="datetime-local" name="round-open" id="round-open" value="{{toDate opens}}" />
-                    </p>
-                    <p>
+                    </div>
+                    <div class="form-actions">
                         <label for="round-close">Round reservation closes</label>
                         <input type="datetime-local" name="round-close" id="round-close" value="{{toDate closes}}" />
-                    </p>
-                    <p>
+                    </div>
+                    <div class="form-actions">
                         <label for="max-reservations">Maximum number of reservations per student</label>
                         <input type="number" name="max-reservations" id="max-reservations" min="1" value="{{max_reservations}}" />
-                    </p>
+                    </div>
                 </fieldset>
                 <div class="form-actions">
                     <button class="btn btn-primary" id="update_round_button" type="button" value="{{_id}}">Update round</button>

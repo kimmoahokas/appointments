@@ -42,3 +42,19 @@ Handlebars.registerHelper('myCourses', function() {
 
 // from lib/helpers.js
 Handlebars.registerHelper('isCourseStaff', isCourseStaff);
+
+
+// this is for the basic layout, but as it is not a template, the function must
+// be added globally
+Handlebars.registerHelper('timeZoneInfo',function() {
+    var serverZone = moment(Session.get('serverDate')).format('Z');
+    var localZone = moment().format('Z');
+
+    console.log('local zone: ' + localZone + ', server zone: ' + serverZone);
+    if (serverZone !== localZone) {
+        return {
+            local: localZone,
+            remote: serverZone
+        };
+    }
+});
