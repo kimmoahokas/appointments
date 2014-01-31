@@ -77,9 +77,9 @@ Meteor.methods({
             }
         });
     },
-    'getServerDate': function() {
+    'getServerTimeZone': function() {
         if(Meteor.isServer) {
-            return new Date();
+            return moment().format('Z');
         }
     }
 });

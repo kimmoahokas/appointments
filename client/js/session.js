@@ -36,9 +36,9 @@ Deps.autorun(function() {
 });
 
 Meteor.startup(function() {
-        Meteor.call('getServerDate', function(err, val) {
+        Meteor.call('getServerTimeZone', function(err, val) {
         if (!err) {
-            Session.set('serverDate', val);
+            Session.set('serverTimeZone', val);
         }
     });
 });
