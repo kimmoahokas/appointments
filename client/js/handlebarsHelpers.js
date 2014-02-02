@@ -39,7 +39,7 @@ Handlebars.registerHelper('myCourses', function() {
 
 // from lib/helpers.js
 Handlebars.registerHelper('isCourseStaff', function() {
-    var course = Session.get('currentCourse');
+    var course = Session.get('selectedCourse');
     if (course) {
         return isCourseStaff(Meteor.userId(), course.code);
     } else {

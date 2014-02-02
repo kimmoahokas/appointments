@@ -15,7 +15,10 @@ Deps.autorun(function() {
 Meteor.subscribe('courses');
 
 Deps.autorun(function() {
-    Meteor.subscribe('rounds', Session.get('courseCode'));
+    var course = Session.get('selectedCourse');
+    if (course) {
+        Meteor.subscribe('rounds', course.code);
+    }
 });
 
 
@@ -27,6 +30,10 @@ Deps.autorun(function() {
     if (course && isCourseStaff(Meteor.userId(), course.code)) {
         Meteor.subscribe('all-appointments', course.code);
     }
+});
+
+Deps.autorun(function() {
+    Meteor.subscribe('available-appointments', Session.get('selectedRound'));
 });
 
 var roundHandle = Meteor.subscribe('all-rounds');

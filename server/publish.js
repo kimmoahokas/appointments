@@ -34,16 +34,18 @@ Meteor.publish('courses', function() {
 
 Meteor.publish('rounds', function(courseCode) {
     var course = Courses.findOne({code: courseCode});
-    if (isCourseStaff(this.userId, courseCode)) {
-        return Rounds.find({course: course._id});
-    }
-    else if (this.userId) {
-        var now = new Date();
-        return Rounds.find({
-            course: course._id,
-            opens: {$lte: now},
-            closes: {$gte: now}
-        });
+    if (course) {
+        if (isCourseStaff(this.userId, courseCode)) {
+            return Rounds.find({course: course._id});
+        }
+        else if (this.userId) {
+            var now = new Date();
+            return Rounds.find({
+                course: course._id,
+                opens: {$lte: now},
+                closes: {$gte: now}
+            });
+        }
     }
 });
 

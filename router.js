@@ -11,7 +11,7 @@ Router.map(function() {
         path: '/',
         template: 'selectCourse',
         before: function() {
-            setCourse( null);
+            setCurrentCourse( null);
         },
         data: function() {
             return {courses: Courses.find()};
@@ -21,7 +21,7 @@ Router.map(function() {
         path: '/:code/rounds',
         template: 'selectRound',
         before: function() {
-            setCourse(this.params.code);
+            setCurrentCourse(this.params.code);
         },
         data: function() {
             var now = new Date();
@@ -29,14 +29,16 @@ Router.map(function() {
                 opens: {$lte: now},
                 closes: {$gte: now}
             });
-            return {rounds:rounds};
+            return {
+                rounds:rounds
+            };
         }
     });
     this.route('reserve', {
         path: '/:code/rounds/:_id',
         template: 'reserveTemplate',
         before: function() {
-            setCourse(this.params.code);
+            setCurrentCourse(this.params.code);
             Session.set('selectedRound', this.params._id);
         }
     });
@@ -44,14 +46,14 @@ Router.map(function() {
         path: '/:code/manage',
         template:'manageAppointmentsTemplate',
         before: function() {
-            setCourse(this.params.code);
+            setCurrentCourse(this.params.code);
         }
     });
     this.route('my_appointments', {
         path: '/:code/my_appointments',
         template: 'appointmentListTemplate',
         before: function() {
-            setCourse(this.params.code);
+            setCurrentCourse(this.params.code);
         }
     });
     this.route('manage_users', {

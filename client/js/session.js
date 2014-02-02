@@ -44,7 +44,7 @@ Meteor.startup(function() {
 });
 
 // set the course that user has selected. Note that selectedCourse may be null
-var setCurrentCourse = function(courseCode) {
+setCurrentCourse = function(courseCode) {
     var course = Courses.findOne({code: courseCode});
     Session.set('selectedCourse', course);
 };

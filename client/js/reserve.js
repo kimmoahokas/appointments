@@ -1,8 +1,3 @@
-
-Deps.autorun(function() {
-    Meteor.subscribe('available-appointments', Session.get('selectedRound'));
-});
-
 var reserveCalendar;
 
 var initReserveCalendar = function() {

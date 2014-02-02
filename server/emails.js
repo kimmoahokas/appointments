@@ -1,6 +1,6 @@
 // send notification email about reserved appointment to student and assistant
 // studentId is needed as a parameter, as it might not be in db yet.
-var sendReservationEmails = function(studentId, appointmentId) {
+sendReservationEmails = function(studentId, appointmentId) {
     var data = getAppointmentInfo(studentId, appointmentId);
 
     // Send two separate emails so that students don't see assistant name
@@ -10,13 +10,13 @@ var sendReservationEmails = function(studentId, appointmentId) {
     Email.send(mail);
     mail = formatEmail(data, 'assistantReserve');
     mail.subject = data.course.code + ' appointment reserved';
-    mail.to = contactEmail(assistant);
+    mail.to = contactEmail(data.assistant);
     Email.send(mail);
 };
 
 // send notification email about cancelled appointment to student and assistant
 // studentId is needed as a parameter, as it might have been removed from db.
-var sendCancellationEmails = function(studentId, appointmentId) {
+sendCancellationEmails = function(studentId, appointmentId) {
     var data = getAppointmentInfo(studentId, appointmentId);
 
     // Send two separate emails so that students don't see assistant name
@@ -41,7 +41,7 @@ var formatEmail = function(data, template) {
         time: moment(data.appointment.start).format(Settings.timeFormat) + ' - ' +
               moment(data.appointment.end).format(Settings.timeFormat),
         lastCancel: moment(data.appointment.editEnds).format(Settings.dateTimeFormat),
-        modifyUrl: Router.url('my_appointments'),
+        modifyUrl: Router.routes['my_appointments'].url({code: data.course.code}),
         student: data.student.username,
         assistant: data.assistant.username
     });
