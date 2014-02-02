@@ -8,10 +8,13 @@ Template.filterTemplate.rounds = function() {
 };
 
 Template.filterTemplate.assistants = function() {
-    return Meteor.users.find({
-        'courses.code': Session.get('courseCode'),
-        'courses.assistant': true
-    });
+    var course = Session.get('selectedCourse');
+    if (course) {
+        return Meteor.users.find({
+            'courses.code': course.code,
+            'courses.assistant': true
+        });
+    }
 };
 
 // little helpers to determine button states

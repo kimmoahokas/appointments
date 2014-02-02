@@ -42,17 +42,18 @@ Meteor.methods({
             return true;
         }
     },
-    deleteRoundAppointments: function(roundId) {
+    deleteRound: function(roundId) {
         check(roundId, String);
-        if (this.userId && Meteor.isServer) {
-            user = Meteor.users.findOne(this.userId);
-            if (user.admin) {
-                Appointments.remove({round: roundId});
-            }
+        var round = Rounds.findOne(roundId);
+        var course = Courses.findOne(round.course);
+        if (Meteor.isServer && isCourseStaff(this.userId, course.code)) {
+            Appointments.remove({round: roundId});
+            Rounds.remove(roundId);
             return true;
         }
     },
     'addMultipleUsers': function(userarray) {
+        //TODO: security!
         //validate the array
         check(userarray, Array);
         userarray.forEach(function(entry) {
@@ -60,11 +61,12 @@ Meteor.methods({
                 username: String,
                 password: String,
                 email: String,
+                courses: Array,
                 profile: Match.Optional(Object)
             });
             // for simplicity add profile:{admin: false} to every object
             if (!entry.profile) {
-                eentry.profile = {};
+                entry.profile = {};
             }
             if (!entry.admin) {
                 entry.admin = false;

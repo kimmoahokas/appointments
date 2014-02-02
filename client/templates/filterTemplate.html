@@ -7,7 +7,7 @@
                     <button class="btn btn-default {{#unless filter.end}}active{{/unless}}" type="button" id="show-old">Show old</button>
                 </div>
 
-                {{#if isCourseStaff currentUser._id selectedCourse.code}}
+                {{#if isCourseStaff}}
                     <div class="btn-group">
                         <button class="btn btn-default {{#if showAllActive}}active{{/if}}" type="button" id="show-all">Show all</button>
                         <button class="btn btn-default {{#if showUnreservedActive}}active{{/if}}" type="button" id="show-unreserved">Show unreserved</button>
@@ -28,7 +28,7 @@
                     </ul>
                 </div>
 
-                {{#if isCourseStaff currentUser._id selectedCourse.code}}
+                {{#if isCourseStaff}}
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle {{#if filter.assistant}}active{{/if}}" data-toggle="dropdown">
                             Show assistant {{#if filter.assistant}}({{getUserName filter.assistant}}){{else}}(All){{/if}}

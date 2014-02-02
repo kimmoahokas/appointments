@@ -1,52 +1,35 @@
 Appointments.allow({
     insert: function (userId, doc) {
-        //only admins can add appointments
-        if (userId) {
-            var user = Meteor.users.findOne(userId);
-            return user.admin;
-        }
-        return false;
+        return isAppointmentEditPermitted(userId, doc);
     },
     update: function (userId, doc, fields, modifier) {
-        //TODO: allow reserving the appointment
-        if (userId) {
-            var user = Meteor.users.findOne(userId);
-            return user.admin;
-        }
-        return false;
+        return isAppointmentEditPermitted(userId, doc);
     },
     remove: function (userId, doc) {
-        if (userId) {
-            var user = Meteor.users.findOne(userId);
-            return user.admin;
-        }
-        return false;
+        return isAppointmentEditPermitted(userId, doc);
     }
 });
 
 Rounds.allow({
     insert: function (userId, doc) {
-        //only admins can add appointments
-        if (userId) {
-            var user = Meteor.users.findOne(userId);
-            return user.admin;
-        }
-        return false;
+        return isRoundEditPermitted(userId, doc);
     },
     update: function (userId, doc, fields, modifier) {
-        //TODO: allow reserving the appointment
-        if (userId) {
-            var user = Meteor.users.findOne(userId);
-            return user.admin;
-        }
-        return false;
+        return isRoundEditPermitted(userId, doc);
     },
     remove: function (userId, doc) {
-        // can only remove your own documents
-        if (userId) {
-            var user = Meteor.users.findOne(userId);
-            return user.admin;
-        }
-        return false;
+        return isRoundEditPermitted(userId, doc);
     }
 });
+
+ var isAppointmentEditPermitted = function(userId, doc) {
+    var roundId = doc.round;
+    var round = Rounds.findOne(roundId);
+    var course = Courses.findOne(round.course);
+    return isCourseStaff(userId, course.code);
+};
+
+var isRoundEditPermitted = function(userId, doc) {
+    var course = Courses.findOne(doc.course);
+    return isCourseStaff(userId, course.code);
+};

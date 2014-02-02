@@ -32,11 +32,15 @@ Meteor.publish('courses', function() {
 });
 
 
-Meteor.publish('available-rounds', function(courseId) {
-    if (this.userId) {
+Meteor.publish('rounds', function(courseCode) {
+    var course = Courses.findOne({code: courseCode});
+    if (isCourseStaff(this.userId, courseCode)) {
+        return Rounds.find({course: course._id});
+    }
+    else if (this.userId) {
         var now = new Date();
         return Rounds.find({
-            course: courseId,
+            course: course._id,
             opens: {$lte: now},
             closes: {$gte: now}
         });
@@ -78,21 +82,11 @@ Meteor.publish('my-appointments', function() {
     }
 });
 
-// publish all events in db to admins
-Meteor.publish('all-appointments', function() {
-    if (this.userId) {
-        var user = Meteor.users.findOne(this.userId);
-        if (user.admin) {
-            return Appointments.find();
-        }
-    }
-});
-
-Meteor.publish('all-rounds', function() {
-    if (this.userId) {
-        var user = Meteor.users.findOne(this.userId);
-        if (user.admin) {
-            return Rounds.find();
-        }
+Meteor.publish('all-appointments', function(courseCode) {
+    if (courseCode && isCourseStaff(this.userId, courseCode)) {
+        var course = Courses.findOne({code: courseCode});
+        var rounds = Rounds.find({course: course._id}, {fields: {_id: 1}}).fetch();
+        var roundIds = _.pluck(rounds, '_id');
+        return Appointments.find({round: {$in: roundIds}});
     }
 });

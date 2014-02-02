@@ -1,5 +1,5 @@
 <template name="manageUsersTemplate">
-    {{#if isCourseStaff currentUser._id selectedCourse.code}}
+    {{#if currentUser.admin}}
         <ul class="nav nav-tabs">
             <li id="add-users-tab" {{#if isSelectedTab "addUsers"}}class="active"{{/if}}><a>Add users</a></li>
             <li id="manage-users-tab" {{#if isSelectedTab "manageUsers"}}class="active"{{/if}}><a>Manage users</a></li>
@@ -23,8 +23,8 @@
         <fieldset>
             <legend>Add multiple users at once</legend>
             <div class="form-group">
-                <label for="multiple-users">JSON array of user objects</label>
-                <textarea id="multiple-users" name="multiple-users" />
+                <label class="control-label" for="multiple-users">JSON array of user objects</label>
+                <textarea class="form-control" id="multiple-users" name="multiple-users" />
             </div>
             <div class="form-actions">
                 <button class="btn btn-primary" type="button" id="add-users-button">Add users</button>

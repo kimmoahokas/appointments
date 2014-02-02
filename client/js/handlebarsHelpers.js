@@ -28,10 +28,7 @@ Handlebars.registerHelper('getRoundName', function(roundId) {
 });
 
 Handlebars.registerHelper('selectedCourse', function() {
-    var courseCode = Session.get('courseCode');
-    if (courseCode) {
-        return Courses.findOne({code: courseCode});
-    }
+    return Session.get('selectedCourse');
 });
 
 Handlebars.registerHelper('myCourses', function() {
@@ -41,13 +38,20 @@ Handlebars.registerHelper('myCourses', function() {
 });
 
 // from lib/helpers.js
-Handlebars.registerHelper('isCourseStaff', isCourseStaff);
+Handlebars.registerHelper('isCourseStaff', function() {
+    var course = Session.get('currentCourse');
+    if (course) {
+        return isCourseStaff(Meteor.userId(), course.code);
+    } else {
+        return false;
+    }
+});
 
 
 // this is for the basic layout, but as it is not a template, the function must
 // be added globally
 Handlebars.registerHelper('timeZoneInfo',function() {
-    var serverZone = moment(Session.get('serverDate')).format('Z');
+    var serverZone = Session.get('serverTimeZone');
     var localZone = moment().format('Z');
 
     console.log('local zone: ' + localZone + ', server zone: ' + serverZone);

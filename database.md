@@ -55,7 +55,6 @@ The course code will be part of the course url in reservation system.
         course: Course id (String),
         name: String,
         location: String,
-        slug: String (unique on this course),
         max_reservations: Number,
         opens: Date,
         closes: Date,
