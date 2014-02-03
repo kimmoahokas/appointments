@@ -26,7 +26,7 @@ sendCancellationEmails = function(studentId, appointmentId) {
     Email.send(mail);
     mail = formatEmail(data, 'assistantCancel');
     mail.subject = data.course.code + ' appointment cancelled';
-    mail.to = contactEmail(assistant);
+    mail.to = contactEmail(data.assistant);
     Email.send(mail);
 };
 

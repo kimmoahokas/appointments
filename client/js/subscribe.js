@@ -22,9 +22,9 @@ Deps.autorun(function() {
 });
 
 
-Meteor.subscribe('available-rounds');
 Meteor.subscribe('my-appointments');
 
+// assistants & admins subscribe to all appointments on course
 Deps.autorun(function() {
     var course = Session.get('selectedCourse');
     if (course && isCourseStaff(Meteor.userId(), course.code)) {
@@ -35,6 +35,3 @@ Deps.autorun(function() {
 Deps.autorun(function() {
     Meteor.subscribe('available-appointments', Session.get('selectedRound'));
 });
-
-var roundHandle = Meteor.subscribe('all-rounds');
-var userHandle = Meteor.subscribe('all-users');

@@ -10,7 +10,7 @@ Router.map(function() {
     this.route('home', {
         path: '/',
         template: 'selectCourse',
-        before: function() {
+        load: function() {
             setCurrentCourse( null);
         },
         data: function() {
@@ -20,7 +20,7 @@ Router.map(function() {
     this.route('course', {
         path: '/:code/rounds',
         template: 'selectRound',
-        before: function() {
+        load: function() {
             setCurrentCourse(this.params.code);
         },
         data: function() {
@@ -37,22 +37,25 @@ Router.map(function() {
     this.route('reserve', {
         path: '/:code/rounds/:_id',
         template: 'reserveTemplate',
-        before: function() {
+        load: function() {
             setCurrentCourse(this.params.code);
             Session.set('selectedRound', this.params._id);
+        },
+        unload: function() {
+            Session.set('selectedRound', null);
         }
     });
     this.route('manage', {
         path: '/:code/manage',
         template:'manageAppointmentsTemplate',
-        before: function() {
+        load: function() {
             setCurrentCourse(this.params.code);
         }
     });
     this.route('my_appointments', {
         path: '/:code/my_appointments',
         template: 'appointmentListTemplate',
-        before: function() {
+        load: function() {
             setCurrentCourse(this.params.code);
         }
     });

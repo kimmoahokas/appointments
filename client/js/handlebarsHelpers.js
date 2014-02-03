@@ -2,7 +2,7 @@
 
 Handlebars.registerHelper('canEdit', function(editEnds) {
     //this = appointment, only students can cancel appointments
-    return new Date() < editEnds && Meteor.userId() === this.assistant;
+    return new Date() < editEnds && Meteor.userId() === this.student;
 });
 
 Handlebars.registerHelper('getUserName', function(userId) {
