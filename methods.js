@@ -52,32 +52,54 @@ Meteor.methods({
             return true;
         }
     },
-    'addMultipleUsers': function(userarray) {
+    'addMultipleUsers': function(formData) {
         //TODO: security!
         //validate the array
-        check(userarray, Array);
-        userarray.forEach(function(entry) {
-            check(entry, {
-                username: String,
-                password: String,
-                email: String,
-                courses: Array,
-                profile: Match.Optional(Object)
+        if (!this.userId) {
+            throw new Meteor.Error(403, 'You must be logged in!');
+        }
+        var user = Meteor.users.findOne(this.userId);
+        if (!user && !user.admin) {
+            throw new Meteor.Error(403, 'You must be admin!');
+        }
+        var matcher = Match.ObjectIncluding({
+            courseId: String,
+            admin: Boolean,
+            assistant: Boolean,
+            userData: [Match.ObjectIncluding({
+                name: String,
+                email: String
+            })]
+        });
+        check(formData, matcher);
+
+        var course = Courses.findOne(formData.courseId);
+        if (!course) {
+            throw new Meteor.Error(403, 'Invalid course!');
+        }
+
+        if (Meteor.isServer) {
+            formData.userData.forEach(function(userObject) {
+                var existingUser = Meteor.users.findOne({'emails.address': userObject.email});
+                if (existingUser) {
+                    AddUserToCourse(existingUser, course, formData.assistant);
+                    sendCourseEnrolmentEmail(existingUser, course);
+                } else {
+                    var password = generatePassword();
+                    Accounts.createUser({
+                        username: userObject.name,
+                        email: userObject.email,
+                        password: password,
+                        admin: formData.admin,
+                        courses: [{
+                            code: course.code,
+                            assistant: formData.assistant
+                        }]
+                    });
+                    sendRegistrationEmail(userObject.email, password, course);
+                }
             });
-            // for simplicity add profile:{admin: false} to every object
-            if (!entry.profile) {
-                entry.profile = {};
-            }
-            if (!entry.admin) {
-                entry.admin = false;
-            }
-        });
-        userarray.forEach(function(user) {
-            var result = Meteor.users.findOne({username: user.username});
-            if (!result) {
-                Accounts.createUser(user);
-            }
-        });
+        }
     },
     'getServerTimeZone': function() {
         if(Meteor.isServer) {
@@ -85,3 +107,18 @@ Meteor.methods({
         }
     }
 });
+
+var AddUserToCourse = function(user, course, isAssistant) {
+    var courseInfo = _.where(user.courses, {code: course.code});
+    if (courseInfo.length < 1) {
+        user.courses.push({code: course.code, assistant: isAssistant});
+        Meteor.users.update(user._id, {
+            $set: {courses: user.courses}
+        });
+    }
+};
+
+var generatePassword = function() {
+    //handy trick from http://stackoverflow.com/a/9719815
+    return Math.random().toString(36).slice(-8);
+};

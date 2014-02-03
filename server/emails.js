@@ -30,6 +30,39 @@ sendCancellationEmails = function(studentId, appointmentId) {
     Email.send(mail);
 };
 
+sendCourseEnrolmentEmail = function(user, course) {
+    var content = Handlebars.templates['enrollmentEmail']({
+        url: Router.routes['home'].url(),
+        courseName: course.name,
+        courseCode: course.code,
+        email: user.emails[0],
+    });
+    Email.send({
+        from: course.email,
+        replyTo: course.email,
+        to: user.emails[0],
+        subject: 'Registration to ' + course.name + ' appointment reservation system',
+        text: content
+    });
+};
+
+sendRegistrationEmail = function(email, password, course) {
+    var content = Handlebars.templates['registrationEmail']({
+        url: Router.routes['home'].url(),
+        courseName: course.name,
+        courseCode: course.code,
+        email: email,
+        password: password
+    });
+    Email.send({
+        from: course.email,
+        replyTo: course.email,
+        to: email,
+        subject: 'Registration to ' + course.name + ' appointment reservation system',
+        text: content
+    });
+};
+
 var formatEmail = function(data, template) {
     var content = Handlebars.templates[template]({
         courseName: data.course.name,

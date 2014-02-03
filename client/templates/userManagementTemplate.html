@@ -19,11 +19,34 @@
 </template>
 
 <template name="addUsersTab">
-    <form>
+    <form id="addUsersForm">
         <fieldset>
             <legend>Add multiple users at once</legend>
             <div class="form-group">
-                <label class="control-label" for="multiple-users">JSON array of user objects</label>
+                <label class="control-label">Course</label>
+                <select class="form-control" id="course-select" name="course-select">
+                    <option value="">Select course...</option>
+                    {{#each myCourses}}
+                        <option value="{{_id}}">{{name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Admin</label>
+                <select class="form-control" id="admin-select" name="admin-select">
+                    <option value="false">False</option>
+                    <option value="true">True</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Assistant</label>
+                <select class="form-control" id="assistant-select" name="assistant-select">
+                    <option value="false">False</option>
+                    <option value="true">True</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="multiple-users">users to be added</label>
                 <textarea class="form-control" id="multiple-users" name="multiple-users" />
             </div>
             <div class="form-actions">
@@ -31,30 +54,10 @@
             </div>
         </fieldset>
     <form>
-    <p>Input users in format (JSON):</p>
+    <p>Input users in format, each user in their own row:</p>
     <pre>
-[
-    {
-        "username": "David Tester",
-        "password": "reallySecretPassword",
-        "email": "david@example.com",
-        "profile": {
-            "admin": true,
-            "studentnum": "123456",
-            "ip": "192.168.0.0"
-        }
-    },
-    {
-        "username": "Tina Tester",
-        "password": "reallySecretPassword",
-        "email": "tina@example.com",
-        "profile": {
-            "admin": false,
-            "studentnum": "54321",
-            "greeting": "Hello"
-        }
-    }
-]</pre>
+email, name
+</pre>
     <p>The profile object can contain any data you want to add, but you can leave it out as well. Required fields are username, password and email. The indentation is not important.</p>
 
 </template>

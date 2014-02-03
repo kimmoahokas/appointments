@@ -31,7 +31,7 @@ Meteor.publish('courses', function() {
     }
 });
 
-
+//TODO: check that user is endolled to the course
 Meteor.publish('rounds', function(courseCode) {
     var course = Courses.findOne({code: courseCode});
     if (course) {
@@ -49,6 +49,8 @@ Meteor.publish('rounds', function(courseCode) {
     }
 });
 
+
+//TODO: check that user is enrolled to the course where this round belongs to
 Meteor.publish('available-appointments', function(roundId) {
     if (this.userId) {
         // if clock is over 18, don't allow reservations for tomorrow
@@ -69,6 +71,7 @@ Meteor.publish('available-appointments', function(roundId) {
     }
 });
 
+//TODO: only publish appointments related to selected course
 Meteor.publish('my-appointments', function() {
     if (this.userId) {
         var now = new Date();
