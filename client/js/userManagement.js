@@ -47,8 +47,8 @@ var readUserAddFormData = function() {
 
     var serializedData = {
         courseId: rawData['course-select'],
-        admin: rawData['admin-select'] === true,
-        assistant: rawData['assistant-select'] === true,
+        admin: rawData['admin-select'] === 'true',
+        assistant: rawData['assistant-select'] === 'true',
         userData: userArray
     };
     return serializedData;
