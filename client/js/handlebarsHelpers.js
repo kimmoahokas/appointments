@@ -53,9 +53,7 @@ Handlebars.registerHelper('isCourseStaff', function() {
 Handlebars.registerHelper('timeZoneInfo',function() {
     var serverZone = Session.get('serverTimeZone');
     var localZone = moment().format('Z');
-
-    console.log('local zone: ' + localZone + ', server zone: ' + serverZone);
-    if (serverZone !== localZone) {
+    if (serverZone && serverZone !== localZone) {
         return {
             local: localZone,
             remote: serverZone
