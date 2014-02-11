@@ -25,10 +25,11 @@ Deps.autorun(function() {
     var filter = {
         end: {$gte: new Date()},
     };
+    var courseStaff = isCourseStaff(Meteor.userId(), Session.get('selectedCourse'));
     // different defaults for students and assistants
-    if (Meteor.user() && !Meteor.user().admin) {
+    if (Meteor.user() && !courseStaff) {
         filter.student = Meteor.userId();
-    } else if (Meteor.user() && Meteor.user().admin) {
+    } else if (Meteor.user() && courseStaff) {
         filter.assistant = Meteor.userId();
         filter.student = {$ne: null};
     }
