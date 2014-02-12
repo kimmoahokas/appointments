@@ -48,7 +48,7 @@ sendCourseEnrolmentEmail = function(user, course) {
     var mail = {
         from: course.email,
         replyTo: course.email,
-        to: user.emails[0],
+        to: user.emails[0].address,
         subject: 'Registration to ' + course.name + ' appointment reservation system',
         text: content
     };
@@ -77,6 +77,7 @@ sendRegistrationEmail = function(email, password, course) {
     try {
         Email.send(mail);
     } catch (e) {
+        console.log(e);
         throw new Meteor.Error(500, 'error while sending email to: ' + mail.to, e);
     }
 };
