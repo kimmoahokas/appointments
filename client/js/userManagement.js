@@ -20,7 +20,7 @@ Template.addUsersTab.events({
             if (!err) {
                 alert("Users succesfully added!");
             } else {
-                alert("Error! Details: " + err.reason);
+                alert("Error! Details: " + err.details);
             }
          });
         event.preventDefault();

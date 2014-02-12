@@ -11,7 +11,11 @@ sendReservationEmails = function(studentId, appointmentId) {
     mail = formatEmail(data, 'assistantReserve');
     mail.subject = data.course.code + ' appointment reserved';
     mail.to = contactEmail(data.assistant);
-    Email.send(mail);
+    try {
+        Email.send(mail);
+    } catch (e) {
+        throw new Meteor.Error(500, 'error while sending email to: ' + mail.to, e);
+    }
 };
 
 // send notification email about cancelled appointment to student and assistant
@@ -27,7 +31,11 @@ sendCancellationEmails = function(studentId, appointmentId) {
     mail = formatEmail(data, 'assistantCancel');
     mail.subject = data.course.code + ' appointment cancelled';
     mail.to = contactEmail(data.assistant);
-    Email.send(mail);
+    try {
+        Email.send(mail);
+    } catch (e) {
+        throw new Meteor.Error(500, 'error while sending email to: ' + mail.to, e);
+    }
 };
 
 sendCourseEnrolmentEmail = function(user, course) {
@@ -37,13 +45,18 @@ sendCourseEnrolmentEmail = function(user, course) {
         courseCode: course.code,
         email: user.emails[0],
     });
-    Email.send({
+    var mail = {
         from: course.email,
         replyTo: course.email,
         to: user.emails[0],
         subject: 'Registration to ' + course.name + ' appointment reservation system',
         text: content
-    });
+    };
+    try {
+        Email.send(mail);
+    } catch (e) {
+        throw new Meteor.Error(500, 'error while sending email to: ' + mail.to, e);
+    }
 };
 
 sendRegistrationEmail = function(email, password, course) {
@@ -54,13 +67,18 @@ sendRegistrationEmail = function(email, password, course) {
         email: email,
         password: password
     });
-    Email.send({
+    var mail = {
         from: course.email,
         replyTo: course.email,
         to: email,
         subject: 'Registration to ' + course.name + ' appointment reservation system',
         text: content
-    });
+    };
+    try {
+        Email.send(mail);
+    } catch (e) {
+        throw new Meteor.Error(500, 'error while sending email to: ' + mail.to, e);
+    }
 };
 
 var formatEmail = function(data, template) {
