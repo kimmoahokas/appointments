@@ -73,7 +73,8 @@ The slug string will be part of the url in the reservation system.
         end: Date,
         allDay: Boolean,
         assistant: User id (String),
-        student: User id (String)
+        student: User id (String),
+        location: String
     }
 
 ## TODO ##
