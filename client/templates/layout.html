@@ -1,22 +1,32 @@
-<template name="layout">
-    <head><title>Lab course appointment scheduler</title></head>
-    {{yield 'navbar'}}
-    <div class="container">
-        {{#if currentUser}}
-            {{yield}}
+<head>
+    <!-- For bootstrap -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Appointment scheduler</title>
+</head>
+
+<body>
+    <div id="wrap">
+        {{> navbar}}
+        <div class="container">
+            {{#if currentUser}}
+                {{renderRouter}}
+            {{else}}
+                <h1>Login required!</h1>
+                <p>Login through the menu in upper right corner to use this system</p>
+            {{/if}}
             {{#with timeZoneInfo}}
                 <!-- show warning if user's timezone doesn't match server's timezone -->
-                <div class="alert">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <strong>Warning!</strong>The times are represented in your computer's local timezone (GMT {{local}}) but the appointments will be held using timezone GMT {{remote}}. Please set your computer clock to correct time and timezone to ensure that you reserve correct appointment slot!
                 </div>
             {{/with}}
-        {{else}}
-            <h1>Login required!</h1>
-            <p>Login through the menu in upper right corner to use this system</p>
-        {{/if}}
-        <footer>
-            <p>&copy; Kimmo Ahokas and Antti Tolonen 2013. In case of problems contact T-110.5102@list.aalto.fi</p>
-        </footer>
+        </div>
     </div>
-</template>
+
+    <footer class="bs-footer" role="contentinfo">
+        <div class="container">
+            <p class="text-muted">&copy; Kimmo Ahokas 2014. In case of problems contact <a href="mailto:kimmo.ahokas@gmail.com">kimmo.ahokas@gmail.com</a>. This project is licensed under the <a href="http://opensource.org/licenses/MIT">MIT License</a> and is available on <a href="https://github.com/mr-kimia/appointments">GitHub</a>.</p>
+        </div>
+    </footer>
+</body>

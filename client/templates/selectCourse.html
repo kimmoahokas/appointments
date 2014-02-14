@@ -1,6 +1,6 @@
-<template name="selectRound">
+<template name="selectCourse">
     <div class="page-header">
-        <h2>Select Round</h2>
+        <h1>Select Course</h1>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -8,17 +8,17 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <td>Round name</td>
+                        <td>Course name</td>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each rounds}}
+                    {{#each courses}}
                         <tr>
-                            <td><a href="{{urlFor 'reserve'}}">{{name}}</a></td>
+                            <td><a href="{{urlFor 'course'}}">{{name}}</a></td>
                         </tr>
                     {{else}}
                         <tr>
-                            <td>No appointment rounds available for reservation, check again later.</td>
+                            <td>You are not currently rolled to any course. If you think this is an error, please contact the course staff in question.</td>
                         </tr>
                     {{/each}}
                 </tbody>

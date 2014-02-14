@@ -1,34 +1,40 @@
 <template name="filterTemplate">
     <div class="row">
-        <div class="span12">
+        <div class="col-md-12">
             <div class="btn-toolbar">
-                <button class="btn {{#unless filter.end}}active{{/unless}}" type="button" id="show-old">Show old</button>
-                {{#if currentUser.profile.admin}}
+
+                <div class="btn-group">
+                    <button class="btn btn-default {{#unless filter.end}}active{{/unless}}" type="button" id="show-old">Show old</button>
+                </div>
+
+                {{#if isCourseStaff}}
                     <div class="btn-group">
-                        <button class="btn {{#if showAllActive}}active{{/if}}" type="button" id="show-all">Show all</button>
-                        <button class="btn {{#if showUnreservedActive}}active{{/if}}" type="button" id="show-unreserved">Show unreserved</button>
-                        <button class="btn {{#if showReservedActive}}active{{/if}}" type="button" id="show-reserved">Show reserved</button>
+                        <button class="btn btn-default {{#if showAllActive}}active{{/if}}" type="button" id="show-all">Show all</button>
+                        <button class="btn btn-default {{#if showUnreservedActive}}active{{/if}}" type="button" id="show-unreserved">Show unreserved</button>
+                        <button class="btn btn-default {{#if showReservedActive}}active{{/if}}" type="button" id="show-reserved">Show reserved</button>
                     </div>
                 {{/if}}
+
                 <div class="btn-group">
-                    <a class="btn dropdown-toggle {{#if filter.round}}active{{/if}}" data-toggle="dropdown" href="#">
+                    <button type="button" class="btn btn-default dropdown-toggle {{#if filter.round}}active{{/if}}" data-toggle="dropdown">
                         Show round {{#if filter.round}}({{getRoundName filter.round}}){{else}}(All){{/if}}
                         <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" id="round-select">
+                    </button>
+                    <ul class="dropdown-menu" id="round-select" role="menu">
                         <li value=""><a href="#">All</a></li>
                         {{#each rounds}}
                             <li><a data-value="{{_id}}" href="#">{{name}}</a></li>
                         {{/each}}
                     </ul>
                 </div>
-                {{#if currentUser.profile.admin}}
+
+                {{#if isCourseStaff}}
                     <div class="btn-group">
-                        <a class="btn dropdown-toggle {{#if filter.assistant}}active{{/if}}" data-toggle="dropdown" href="#">
+                        <button type="button" class="btn btn-default dropdown-toggle {{#if filter.assistant}}active{{/if}}" data-toggle="dropdown">
                             Show assistant {{#if filter.assistant}}({{getUserName filter.assistant}}){{else}}(All){{/if}}
                             <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" id="assistant-select">
+                        </button>
+                        <ul class="dropdown-menu" id="assistant-select" role="menu">
                             <li value=""><a href="#">All</a></li>
                             {{#each assistants}}
                                 <li><a data-value="{{_id}}"href="#">{{username}}</a></li>

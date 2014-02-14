@@ -25,10 +25,11 @@ Deps.autorun(function() {
     var filter = {
         end: {$gte: new Date()},
     };
+    var courseStaff = isCourseStaff(Meteor.userId(), Session.get('selectedCourse'));
     // different defaults for students and assistants
-    if (Meteor.user() && !Meteor.user().profile.admin) {
+    if (Meteor.user() && !courseStaff) {
         filter.student = Meteor.userId();
-    } else if (Meteor.user() && Meteor.user().profile.admin) {
+    } else if (Meteor.user() && courseStaff) {
         filter.assistant = Meteor.userId();
         filter.student = {$ne: null};
     }
@@ -36,9 +37,15 @@ Deps.autorun(function() {
 });
 
 Meteor.startup(function() {
-        Meteor.call('getServerDate', function(err, val) {
+        Meteor.call('getServerTimeZone', function(err, val) {
         if (!err) {
-            Session.set('serverDate', val);
+            Session.set('serverTimeZone', val);
         }
     });
 });
+
+// set the course that user has selected. Note that selectedCourse may be null
+setCurrentCourse = function(courseCode) {
+    var course = Courses.findOne({code: courseCode});
+    Session.set('selectedCourse', course);
+};

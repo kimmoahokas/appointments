@@ -30,11 +30,11 @@ var initManageCalendar = function() {
                 alert('Please select round before creating slots');
                 return;
             }
-            if(!Meteor.user() || !Meteor.user().profile.admin) {
+            var course = Session.get('selectedCourse');
+            if(course && isCourseStaff(Meteor.userId(), course.code)) {
                 //only admins can create appointments
-                return;
+                createAppointments(startDate, endDate);
             }
-            createAppointments(startDate, endDate);
         },
         eventClick: function(event) {
             Session.set('editedAppointmentId', event['_id']);
@@ -54,9 +54,11 @@ Template.manageAppointmentsTemplate.rendered = function() {
 
 var createAppointments = function(startDate, endDate) {
     var name = $('select#round option:selected').text();
-    var round = $('select#round option:selected').val();
+    var roundId = $('select#round option:selected').val();
     var duration = parseInt($('#duration_field').val(),10);
     var space = parseInt($('#space_field').val(),10);
+
+    var round = Rounds.findOne(roundId);
 
     //TODO: check that appointments are in the ROUNDrange?
     var currentTime = startDate;
@@ -65,12 +67,13 @@ var createAppointments = function(startDate, endDate) {
         if (end <= endDate) {
             var appointment = {
                 title: name,
-                round: round,
+                round: roundId,
                 start: currentTime,
                 end: end,
                 allDay: false,
                 assistant: Meteor.userId(),
                 student: null,
+                location: round.location
             };
             Appointments.insert(appointment);
         }
@@ -126,7 +129,8 @@ Template.manageAppointmentsTemplate.events({
             Deps.flush();
             var rname = prompt('Enter name for new round');
             if (rname) {
-                var id = Rounds.insert({name:rname, max_reservations:1});
+                var course = Session.get('selectedCourse');
+                var id = createRound(rname, course);
                 Session.set('editRoundId', id);
                 //update DOM so we can modify selection
                 Deps.flush();
@@ -143,7 +147,8 @@ Template.manageAppointmentsTemplate.events({
                 $set: {
                     opens: moment($('#round-open').val()).toDate(),
                     closes: moment($('#round-close').val()).toDate(),
-                    max_reservations: $('#max-reservations').val()
+                    max_reservations: $('#max-reservations').val(),
+                    location: $('#round-location').val()
                 }
             });
         }
@@ -151,8 +156,7 @@ Template.manageAppointmentsTemplate.events({
     },
     'click #delete_round_button': function(event) {
         if (Session.get('editRoundId')) {
-             Rounds.remove(Session.get('editRoundId'));
-             var result = Meteor.call('deleteRoundAppointments', Session.get('editRoundId'));
+             var result = Meteor.call('deleteRound', Session.get('editRoundId'));
              console.log(result);
              Session.set('editRoundId', null);
         }
@@ -201,3 +205,19 @@ Deps.autorun(function() {
     var count = Appointments.find().count();
     $('#manageCalendar').fullCalendar('refetchEvents');
 });
+
+var createRound = function(name, course) {
+    var s = course.roundDefaultStart;
+    var c = course.roundDefaultEnd;
+    var open = moment().day(s.day).hour(s.hour).minute(s.minute).millisecond(0).toDate();
+    var close = moment().day(c.day).hour(c.hour).minute(c.minute).millisecond(0).toDate();
+    var id = Rounds.insert({
+        course: course._id,
+        name: name,
+        location: course.defaultLocation,
+        max_reservations: course.roundDefaultMaxReservations,
+        opens: open,
+        closes: close
+    });
+    return id;
+};

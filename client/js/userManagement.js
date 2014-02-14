@@ -15,19 +15,42 @@ Template.manageUsersTemplate.isSelectedTab = function(tab) {
 
 Template.addUsersTab.events({
     'click #add-users-button': function(event) {
-        var text = $('textarea#multiple-users').val();
-        try {
-             var array = $.parseJSON(text);
-             // no errors, so assume that the object is good and send it to server
-             Meteor.call('addMultipleUsers', array, function(err, result) {
-                if (!err) {
-                    alert("Users succesfully added!");
-                } else {
-                    alert("Error! Details: " + err.reason);
-                }
-             });
-        } catch(expection) {
-            alert("Unable to Parse JSON. Please fix your syntax");
-        }
+        var formData = readUserAddFormData();
+         Meteor.call('addMultipleUsers', formData, function(err, result) {
+            if (!err) {
+                alert("Users succesfully added!");
+            } else {
+                alert("Error! Details: " + err.details);
+            }
+         });
+        event.preventDefault();
     }
 });
+
+
+var readUserAddFormData = function() {
+    var rawData = {};
+    $.each($('#addUsersForm').serializeArray(), function() {
+        rawData[this.name] = this.value;
+    });
+    var users = rawData['multiple-users'].replace('\r', '');
+    var userStringArray = users.split('\n');
+    var userArray = [];
+    userStringArray.forEach(function(data) {
+        var parts = data.split(',');
+        userArray.push({
+            email: parts[0].trim(),
+            name: parts[1].trim()
+
+        });
+    });
+
+    var serializedData = {
+        courseId: rawData['course-select'],
+        admin: rawData['admin-select'] === 'true',
+        assistant: rawData['assistant-select'] === 'true',
+        userData: userArray
+    };
+    return serializedData;
+};
+

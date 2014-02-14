@@ -16,33 +16,10 @@ Meteor.methods({
         }
         var student = Meteor.users.findOne(this.userId);
         var assistant = Meteor.users.findOne(appointment.assistant);
+
         if(Meteor.isServer && student && assistant) {
             Appointments.update(appointmentId, {$set: {student: this.userId}});
-            var mail = {
-                from: 'T-110.5102@list.aalto.fi',
-                to: contactEmail(student),
-                replyTo: 'T-110.5102@list.aalto.fi',
-                subject: 'T-110.5102 Appointment',
-                text:
-"You have just reserved appointment on course\n" +
-"T-110.5102 Laboratory Works in Networking and Security\n" +
-"Details:\n" +
-"   Date: " + moment(appointment.start).format(Settings.dateFormat) + "\n" +
-"   Time: " + moment(appointment.start).format(Settings.timeFormat) + ' - ' + moment(appointment.end).format(Settings.timeFormat) + "\n" +
-"   Location: Computer Science building room A120 (Playroom)\n" +
-"   Student: " + student.username + "\n" +
-"You can cancel this appointment until " + moment(appointment.editEnds).format(Settings.dateTimeFormat) + "\n" +
-"To cancel go to " + Router.url('my_appointments') + '\n' +
-"Remember to be on time!\n" +
-"If you can't come to appointment, contact course email immediately!\n\n" +
-"Best regards,\n" +
-"T-110.5102 Staff\n"
-            };
-
-            // Send two separate emails so that students don't see assistant name
-            Email.send(mail);
-            mail.to = contactEmail(assistant);
-            Email.send(mail);
+            sendReservationEmails(this.userId, appointmentId);
             return true;
         }
     },
@@ -60,78 +37,88 @@ Meteor.methods({
             throw new Meteor.Error(403, 'You have not reserved this appointment!');
         }
         if(Meteor.isServer) {
-            var student = Meteor.users.findOne(this.userId);
-            var assistant = Meteor.users.findOne(appointment.assistant);
             Appointments.update(appointmentId, {$set: {student: null}});
-            var mail = {
-                from: 'T-110.5102@list.aalto.fi',
-                to: contactEmail(student),
-                replyTo: 'T-110.5102@list.aalto.fi',
-                subject: 'T-110.5102 Appointment cancelled',
-                text:
-"You have just cancelled appointment on course\n" +
-"T-110.5102 Laboratory Works in Networking and Security\n" +
-"Details:\n" +
-"   Date: " + moment(appointment.start).format(Settings.dateFormat) + "\n" +
-"   Time: " + moment(appointment.start).format(Settings.timeFormat) + ' - ' + moment(appointment.end).format(Settings.timeFormat) + "\n" +
-"   Location: Computer Science building room A120 (Playroom)\n" +
-"   Student: " + student.username + "\n\n" +
-"Best regards,\n" +
-"T-110.5102 Staff\n"
-            };
-
-            // Send two separate emails so that students don't see assistant name
-            Email.send(mail);
-            mail.to = contactEmail(assistant);
-            Email.send(mail);
+            sendCancellationEmails(this.userId, appointmentId);
             return true;
         }
     },
-    deleteRoundAppointments: function(roundId) {
+    deleteRound: function(roundId) {
         check(roundId, String);
-        if (this.userId && Meteor.isServer) {
-            user = Meteor.users.findOne(this.userId);
-            if (user.profile.admin) {
-                Appointments.remove({round: roundId});
-            }
+        var round = Rounds.findOne(roundId);
+        var course = Courses.findOne(round.course);
+        if (Meteor.isServer && isCourseStaff(this.userId, course.code)) {
+            Appointments.remove({round: roundId});
+            Rounds.remove(roundId);
             return true;
         }
     },
-    'addMultipleUsers': function(userarray) {
+    'addMultipleUsers': function(formData) {
+        //TODO: security!
         //validate the array
-        check(userarray, Array);
-        userarray.forEach(function(entry) {
-            check(entry, {
-                username: String,
-                password: String,
-                email: String,
-                profile: Match.Optional(Object)
+        if (!this.userId) {
+            throw new Meteor.Error(403, 'You must be logged in!');
+        }
+        var user = Meteor.users.findOne(this.userId);
+        if (!user && !user.admin) {
+            throw new Meteor.Error(403, 'You must be admin!');
+        }
+        var matcher = Match.ObjectIncluding({
+            courseId: String,
+            admin: Boolean,
+            assistant: Boolean,
+            userData: [Match.ObjectIncluding({
+                name: String,
+                email: String
+            })]
+        });
+        check(formData, matcher);
+
+        var course = Courses.findOne(formData.courseId);
+        if (!course) {
+            throw new Meteor.Error(403, 'Invalid course!');
+        }
+
+        if (Meteor.isServer) {
+            formData.userData.forEach(function(userObject) {
+                var existingUser = Meteor.users.findOne({'emails.address': userObject.email});
+                if (existingUser) {
+                    AddUserToCourse(existingUser, course, formData.assistant);
+                    sendCourseEnrolmentEmail(existingUser, course);
+                } else {
+                    var password = generatePassword();
+                    Accounts.createUser({
+                        username: userObject.name,
+                        email: userObject.email,
+                        password: password,
+                        admin: formData.admin,
+                        courses: [{
+                            code: course.code,
+                            assistant: formData.assistant
+                        }]
+                    });
+                    sendRegistrationEmail(userObject.email, password, course);
+                }
             });
-            // for simplicity add profile:{admin: false} to every object
-            if (!entry.profile) {
-                entry.profile = {};
-            }
-            if (!entry.profile.admin) {
-                entry.profile.admin = false;
-            }
-        });
-        userarray.forEach(function(user) {
-            var result = Meteor.users.findOne({username: user.username});
-            if (!result) {
-                Accounts.createUser(user);
-            }
-        });
+        }
     },
-    'getServerDate': function() {
+    'getServerTimeZone': function() {
         if(Meteor.isServer) {
-            return new Date();
+            return moment().format('Z');
         }
     }
 });
 
-var contactEmail = function (user) {
-    if (user.emails && user.emails.length) {
-        return user.emails[0].address;
+var AddUserToCourse = function(user, course, isAssistant) {
+    var courseInfo = _.where(user.courses, {code: course.code});
+    if (courseInfo.length < 1) {
+        user.courses.push({code: course.code, assistant: isAssistant});
+        Meteor.users.update(user._id, {
+            $set: {courses: user.courses}
+        });
     }
-    return null;
+};
+
+var generatePassword = function() {
+    //handy trick from http://stackoverflow.com/a/9719815
+    return Math.random().toString(36).slice(-8);
 };

@@ -2,7 +2,7 @@
 
 Handlebars.registerHelper('canEdit', function(editEnds) {
     //this = appointment, only students can cancel appointments
-    return new Date() < editEnds && Meteor.userId() === this.assistant;
+    return new Date() < editEnds && Meteor.userId() === this.student;
 });
 
 Handlebars.registerHelper('getUserName', function(userId) {
@@ -25,4 +25,38 @@ Handlebars.registerHelper('formatDateTime', function(date) {
 Handlebars.registerHelper('getRoundName', function(roundId) {
     var round = Rounds.findOne(roundId);
     return round.name;
+});
+
+Handlebars.registerHelper('selectedCourse', function() {
+    return Session.get('selectedCourse');
+});
+
+Handlebars.registerHelper('myCourses', function() {
+    // it is enough to just return all courses, as subscriptions handle
+    // permissions.
+    return Courses.find();
+});
+
+// from lib/helpers.js
+Handlebars.registerHelper('isCourseStaff', function() {
+    var course = Session.get('selectedCourse');
+    if (course) {
+        return isCourseStaff(Meteor.userId(), course.code);
+    } else {
+        return false;
+    }
+});
+
+
+// this is for the basic layout, but as it is not a template, the function must
+// be added globally
+Handlebars.registerHelper('timeZoneInfo',function() {
+    var serverZone = Session.get('serverTimeZone');
+    var localZone = moment().format('Z');
+    if (serverZone && serverZone !== localZone) {
+        return {
+            local: localZone,
+            remote: serverZone
+        };
+    }
 });
