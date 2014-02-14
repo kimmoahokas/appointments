@@ -54,9 +54,11 @@ Template.manageAppointmentsTemplate.rendered = function() {
 
 var createAppointments = function(startDate, endDate) {
     var name = $('select#round option:selected').text();
-    var round = $('select#round option:selected').val();
+    var roundId = $('select#round option:selected').val();
     var duration = parseInt($('#duration_field').val(),10);
     var space = parseInt($('#space_field').val(),10);
+
+    var round = Rounds.findOne(roundId);
 
     //TODO: check that appointments are in the ROUNDrange?
     var currentTime = startDate;
@@ -65,12 +67,13 @@ var createAppointments = function(startDate, endDate) {
         if (end <= endDate) {
             var appointment = {
                 title: name,
-                round: round,
+                round: roundId,
                 start: currentTime,
                 end: end,
                 allDay: false,
                 assistant: Meteor.userId(),
                 student: null,
+                location: round.location
             };
             Appointments.insert(appointment);
         }

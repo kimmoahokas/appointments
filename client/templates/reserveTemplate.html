@@ -17,6 +17,9 @@
                     <dd id="reserve-start">{{formatDate start}}</dd>
                     <dt>Time</dt>
                     <dd id="reserve-end">{{formatTime start}} - {{formatTime end}}</dd>
+                    <dt>Location</dt>
+                    <dd id="reserve-location">{{location}}</dd>
+
                 </dl>
                 <div class="form-actions">
                     <button class="btn btn-primary" id="reserve-appointment-button" type="button" value="{{_id}}" {{#unless canReserve editEnds}}disabled="disabled"{{/unless}}>Reserve appointment</button>
