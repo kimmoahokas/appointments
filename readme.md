@@ -7,12 +7,13 @@ The system is built using [Meteor][meteor].
 ## Getting started ##
 
 1. Install [node.js][nodejs]
-2. Install meteorite: `sudo -H npm install -g meteorite`
-3. Clone source: `git clone https://github.com/mr-kimia/appointments.git`
-4. Change to project dir: `cd appointments`
-5. Install dependencies with meteorite: `mrt install`
-6. Run development server: `meteor`
-7. Open [http://localhost:3000](http://localhost:3000)
+2. Install [Meteor][meteor]: `curl https://install.meteor.com/ | sh`
+3. Install meteorite: `sudo -H npm install -g meteorite`
+4. Clone source: `git clone https://github.com/mr-kimia/appointments.git`
+5. Change to project dir: `cd appointments`
+6. Install dependencies with meteorite: `mrt install`
+7. Run development server: `meteor`
+8. Open [http://localhost:3000](http://localhost:3000)
 
 ## Package management ##
 
