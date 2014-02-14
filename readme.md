@@ -8,8 +8,8 @@ The system is built using [Meteor][meteor].
 
 1. Install [node.js][nodejs]
 2. Install meteorite: `sudo -H npm install -g meteorite`
-3. Clone source: `git clone git@git.cs.hut.fi:appointment-scheduler/tuija.git`
-4. Change to project dir: `cd tuija`
+3. Clone source: `git clone https://github.com/mr-kimia/appointments.git`
+4. Change to project dir: `cd appointments`
 5. Install dependencies with meteorite: `mrt install`
 6. Run development server: `meteor`
 7. Open [http://localhost:3000](http://localhost:3000)
@@ -22,7 +22,7 @@ Licensed under the MIT License (MIT). see file license.md for further details.
 
 ## Deploying to production ##
 
-For instructions on how to deploy Tuija to production environment see file deployment.md
+For instructions on how to deploy Tuija to production environment see file deploying.md
 
 [meteor]: http://www.meteor.com
 [nodejs]: http://nodejs.org

@@ -70,11 +70,10 @@ These instructions are tested on Ubuntu 12.04.3 LTS, for other distributions you
 
 6. Modify to your needs. Probably change course code, email templates and login info.
 
-    See at least following files:
+    See *at least* following files:
 
-        client/templates/layout.html    (contact info and course name)
-        methods.js  (emails sent by sestem are here embedded in code)
-        init.js     (admin user. You can add all users here or use the mass add tool in browser)
+        client/templates/layout.html    (contact info)
+        init.js     (admin user and courses.)
 
 6. Bundle the meteor application
 
